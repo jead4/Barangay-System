@@ -1,0 +1,233 @@
+/* ============================================================
+   ABOUT.CSS — Place in: css/about.css
+   ============================================================ */
+
+/* ── HERO ── */
+.about-hero {
+  background: var(--navy);
+  padding: 8rem 3.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero::before {
+  content: '';
+  position: absolute;
+  right: -100px; top: -100px;
+  width: 550px; height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46,109,164,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+.about-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+}
+.about-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.about-hero-label {
+  display: inline-block;
+  background: rgba(42,157,107,0.12);
+  border: 1px solid rgba(42,157,107,0.3);
+  color: var(--gold-light);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+.about-hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem; font-weight: 900;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+}
+.about-hero p {
+  color: rgba(255,255,255,0.58);
+  font-size: 1.05rem; line-height: 1.75;
+  max-width: 560px;
+}
+
+/* ── ORIGIN & HISTORY ── */
+.about-content {
+  background: var(--cream);
+  padding: 5rem 3.5rem;
+}
+.about-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.about-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 1px solid rgba(15,31,46,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.about-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(15,31,46,0.08);
+}
+.about-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.about-card-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  flex-shrink: 0;
+}
+.about-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--navy);
+}
+.about-card p {
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+.about-card p + p { margin-top: 0.85rem; }
+
+/* ── STATISTICS ── */
+.about-stats {
+  background: var(--white);
+  padding: 5rem 3.5rem;
+  border-top: 1px solid rgba(15,31,46,0.06);
+}
+.about-stats-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.about-stats .section-label { margin-bottom: 0.5rem; }
+.about-stats .section-title { margin-bottom: 0.75rem; }
+.about-stats .section-sub   { margin-bottom: 3rem; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.stat-card {
+  background: var(--light);
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(15,31,46,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(15,31,46,0.08);
+}
+.stat-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.icon-blue  { background: rgba(46,109,164,0.12); }
+.icon-gold  { background: rgba(42,157,107,0.12); }
+.icon-green { background: rgba(34,197,94,0.10); }
+.icon-red   { background: rgba(239,68,68,0.10); }
+
+.stat-info label {
+  display: block;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 5px;
+}
+.stat-info strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem; font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+
+/* Annual Budget bar */
+.stat-budget {
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 16px;
+  padding: 1.75rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stat-budget label {
+  display: block;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.stat-budget strong {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem; font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.budget-icon {
+  font-size: 2.8rem;
+  opacity: 0.35;
+}
+
+/* ── 12 SITIOS ── */
+.sitios-section {
+  background: var(--navy);
+  padding: 5rem 3.5rem;
+  text-align: center;
+}
+.sitios-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.sitios-section .section-label { color: var(--gold-light); }
+.sitios-section .section-title { color: var(--white); }
+.sitios-section .section-sub {
+  color: rgba(255,255,255,0.48);
+  margin-bottom: 3rem;
+}
+.sitios-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+.sitio-chip {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 10px 22px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.875rem; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sitio-chip:hover,
+.sitio-chip.active {
+  background: rgba(42,157,107,0.15);
+  border-color: var(--gold);
+  color: var(--gold-light);
+}

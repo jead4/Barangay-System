@@ -1,0 +1,186 @@
+/* ============================================================
+   GLOBAL.CSS — Barangay Day-os Connect
+   Shared styles: variables, reset, navbar, footer, utilities
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── VARIABLES ── */
+:root {
+  --navy:       #0f1f2e;
+  --navy-mid:   #162840;
+  --blue:       #1b3d5c;
+  --sky:        #2e6da4;
+  --gold:       #2a9d6b;
+  --gold-light: #57c494;
+  --cream:      #f4f7f9;
+  --white:      #ffffff;
+  --gray:       #5a6a7a;
+  --light:      #eaf1f7;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--navy);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; }
+button { cursor: pointer; font-family: 'Inter', sans-serif; }
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.5rem;
+  height: 68px;
+  background: rgba(15, 31, 46, 0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(42, 157, 107, 0.18);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brgy-logo{
+    width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover; /* makes image fit nicely */
+   }
+
+.nav-links {
+  display: flex;
+  gap: 1.75rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.68);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--gold-light);
+}
+
+.nav-cta {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 9px 22px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: var(--white);
+}
+.btn-ghost:hover { border-color: var(--gold-light); color: var(--gold-light); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), #1f7a51);
+  color: var(--white);
+  font-weight: 600;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(42,157,107,0.3); }
+
+/* ── SECTION UTILITIES ── */
+.section-label {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sky);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.section-sub {
+  color: var(--gray);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.page-hero-label {
+  display: inline-block;
+  background: rgba(42, 157, 107, 0.12);
+  border: 1px solid rgba(42, 157, 107, 0.3);
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #06111c;
+  padding: 2rem 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer p { color: rgba(255, 255, 255, 0.28); font-size: 0.8rem; }
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.95rem;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.7s ease both; }

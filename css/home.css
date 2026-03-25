@@ -1,0 +1,224 @@
+/* ============================================================
+   HOME.CSS — index.html specific styles
+   ============================================================ */
+   
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--navy);
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 68px;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 70% 50%, rgba(46,109,164,0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(42,157,107,0.07) 0%, transparent 60%);
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 1150px; margin: 0 auto;
+  padding: 0 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.hero-label {
+  display: inline-block;
+  background: rgba(42,157,107,0.12);
+  border: 1px solid rgba(42,157,107,0.3);
+  color: var(--gold-light);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 900; color: var(--white);
+  line-height: 1.1; margin-bottom: 1.25rem;
+}
+
+.hero h1 span {
+  background: linear-gradient(135deg, var(--gold-light), #2a9d6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  color: rgba(255,255,255,0.58);
+  font-size: 1rem; line-height: 1.75;
+  margin-bottom: 2.5rem; max-width: 460px;
+}
+
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-hero-primary {
+  background: linear-gradient(135deg, var(--gold), #1f7a51);
+  color: var(--white); font-weight: 700;
+  padding: 14px 32px; border-radius: 8px; border: none;
+  font-size: 0.95rem; transition: all 0.2s;
+}
+.btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(42,157,107,0.35); }
+
+.btn-hero-ghost {
+  background: transparent; color: var(--white); font-weight: 500;
+  padding: 14px 32px; border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  font-size: 0.95rem; transition: all 0.2s;
+}
+.btn-hero-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+.service-pills { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.service-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px; padding: 6px 14px;
+  color: rgba(255,255,255,0.6); font-size: 0.78rem; font-weight: 500;
+}
+.service-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+/* Hero animations */
+.hero-left > * { animation: fadeUp 0.7s ease both; }
+.hero-label   { animation-delay: 0.1s; }
+.hero h1      { animation-delay: 0.2s; }
+.hero p       { animation-delay: 0.3s; }
+.hero-actions { animation-delay: 0.4s; }
+.service-pills{ animation-delay: 0.5s; }
+.hero-card    { animation: fadeUp 0.7s 0.3s ease both; }
+
+/* ── LOGIN CARD ── */
+.hero-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 22px; padding: 2.5rem;
+  backdrop-filter: blur(20px);
+}
+.hero-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--white); margin-bottom: 0.4rem; }
+.hero-card > p { color: rgba(255,255,255,0.45); font-size: 0.875rem; margin-bottom: 1.75rem; }
+
+.input-group { margin-bottom: 1rem; }
+.input-group label { display: block; color: rgba(255,255,255,0.65); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 6px; }
+.input-group input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 12px 14px;
+  color: var(--white); font-size: 0.9rem; outline: none;
+  transition: border-color 0.2s;
+}
+.input-group input:focus { border-color: var(--gold); }
+.input-group input::placeholder { color: rgba(255,255,255,0.25); }
+
+.card-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+.card-actions button { flex: 1; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; border: none; }
+.card-register { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12) !important; color: var(--white); }
+.card-login { background: linear-gradient(135deg, var(--gold), #1f7a51); color: var(--white); }
+.card-login:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(42,157,107,0.3); }
+
+.card-divider { display: flex; align-items: center; gap: 1rem; margin: 1.25rem 0; }
+.card-divider::before, .card-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.card-divider span { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+.card-signup-link { color: rgba(255,255,255,0.38); font-size: 0.8rem; text-align: center; }
+.card-signup-link a { color: var(--gold-light); }
+
+/* ── MISSION & VISION ── */
+.mv-section {
+  background: var(--white);
+  padding: 7rem 3.5rem;
+  position: relative; overflow: hidden;
+}
+.mv-section::before {
+  content: ''; position: absolute; left: -200px; top: -200px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(46,109,164,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.mv-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+.mv-header { text-align: center; margin-bottom: 4rem; }
+.mv-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3.5rem; }
+
+.mv-card { border-radius: 24px; padding: 3rem; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
+.mv-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(15,31,46,0.12); }
+
+.mv-card-mission { background: var(--navy); }
+.mv-card-vision  { background: linear-gradient(135deg, #edf5f1, #f4faf7); border: 1px solid rgba(42,157,107,0.2); }
+
+.mv-card-deco { position: absolute; right: -40px; top: -40px; width: 180px; height: 180px; border-radius: 50%; opacity: 0.07; }
+.mv-card-mission .mv-card-deco { background: var(--gold); }
+.mv-card-vision  .mv-card-deco { background: var(--navy); }
+
+.mv-card-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 16px; border-radius: 100px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.mv-card-mission .mv-card-badge { background: rgba(42,157,107,0.15); border: 1px solid rgba(42,157,107,0.3); color: var(--gold-light); }
+.mv-card-vision  .mv-card-badge { background: rgba(15,31,46,0.07); border: 1px solid rgba(15,31,46,0.12); color: var(--navy); }
+
+.mv-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.85rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+.mv-card-mission h3 { color: var(--white); }
+.mv-card-vision  h3 { color: var(--navy); }
+.mv-card p { font-size: 0.95rem; line-height: 1.8; }
+.mv-card-mission p { color: rgba(255,255,255,0.62); }
+.mv-card-vision  p { color: #4a5568; }
+
+.mv-values { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.value-item {
+  background: var(--light); border-radius: 16px; padding: 1.5rem;
+  text-align: center; transition: all 0.2s; border: 1px solid transparent;
+}
+.value-item:hover { border-color: rgba(46,109,164,0.18); background: var(--white); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(15,31,46,0.07); }
+.value-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+.value-item h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 0.35rem; }
+.value-item p { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
+
+/* ── DIGITAL SERVICES ── */
+.services-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #0d2040 100%);
+  padding: 5rem 3.5rem; position: relative; overflow: hidden;
+}
+.services-section::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.services-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+.services-section .section-label { color: var(--gold-light); }
+.services-section .section-title { color: var(--white); }
+.services-section .section-sub   { color: rgba(255,255,255,0.48); margin-bottom: 3rem; }
+
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.service-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 2rem;
+  transition: all 0.25s; cursor: pointer;
+}
+.service-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(42,157,107,0.25); transform: translateY(-4px); }
+.service-card-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; background: rgba(255,255,255,0.07); }
+.service-card h4  { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--white); margin-bottom: 0.5rem; }
+.service-card p   { font-size: 0.85rem; color: rgba(255,255,255,0.48); line-height: 1.6; }
+.service-card-arrow { display: inline-block; margin-top: 1rem; color: var(--gold-light); font-size: 0.8rem; font-weight: 600; }
