@@ -1,0 +1,421 @@
+/* ============================================================
+   SK.CSS — Place in: css/sk.css
+   ============================================================ */
+
+/* ── HERO ── */
+.sk-hero {
+  min-height: 65vh;
+  background: url('../assets/images/BG.jpg') center/cover no-repeat;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 9rem 3.5rem 4rem;
+}
+.sk-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+}
+.sk-hero-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 1;
+}
+.sk-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: flex-end;
+}
+.sk-hero-label {
+  display: inline-block;
+  background: rgba(42,157,107,0.12);
+  border: 1px solid rgba(42,157,107,0.3);
+  color: var(--gold-light);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+.sk-hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.05;
+  margin-bottom: 1.25rem;
+}
+.sk-hero h1 span {
+  background: linear-gradient(135deg, var(--gold-light), #7eefc0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sk-hero p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem; line-height: 1.75;
+  max-width: 520px;
+}
+.sk-hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-end;
+}
+.sk-stat {
+  text-align: center;
+}
+.sk-stat strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem; font-weight: 900;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.sk-stat span {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-top: 5px;
+  display: block;
+}
+
+/* ── SHARED LABEL & TITLE ── */
+.sk-section-label {
+  display: block;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--sky);
+  margin-bottom: 0.5rem;
+}
+.sk-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 2.5rem;
+}
+
+/* ── SK CHAIRPERSON ── */
+.sk-chair-section {
+  background: var(--white);
+  padding: 4.5rem 3.5rem;
+}
+.sk-chair-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.sk-chair-card {
+  background: linear-gradient(135deg, var(--navy), #0d2a1a);
+  border-radius: 24px;
+  padding: 3rem 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+.sk-chair-card::before {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(87,196,148,0.12) 0%, transparent 70%);
+}
+.sk-chair-photo {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #1a7a4a);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem; font-weight: 800;
+  color: var(--white);
+  flex-shrink: 0;
+  border: 4px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 0 5px rgba(87,196,148,0.2), 0 16px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+  position: relative; z-index: 2;
+}
+.sk-chair-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+}
+.sk-chair-info {
+  position: relative; z-index: 2;
+  flex: 1;
+}
+.sk-chair-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--white);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 5px 16px; border-radius: 100px;
+  margin-bottom: 0.75rem;
+}
+.sk-chair-info h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 900;
+  color: var(--white);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+.sk-chair-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  display: block;
+}
+.sk-chair-quote {
+  border-left: 3px solid var(--gold-light);
+  padding-left: 1.25rem;
+  margin: 0 0 1.5rem;
+  color: rgba(255,255,255,0.72);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  font-style: italic;
+  max-width: 520px;
+}
+.sk-chair-meta {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+.sk-chair-meta span {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ── SK OFFICIALS ── */
+.sk-officials-section {
+  background: var(--cream);
+  padding: 4.5rem 3.5rem;
+}
+.sk-officials-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.sk-officials-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+.sk-official-card {
+  background: var(--white);
+  border-radius: 18px;
+  border: 1px solid rgba(15,31,46,0.07);
+  padding: 2rem 1.25rem;
+  text-align: center;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.sk-official-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.sk-official-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(15,31,46,0.1);
+}
+.sk-official-card:hover::before { opacity: 1; }
+.sk-official-photo {
+  width: 85px; height: 85px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--sky));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 800;
+  color: var(--white);
+  margin: 0 auto 1rem;
+  border: 3px solid var(--white);
+  box-shadow: 0 4px 16px rgba(15,31,46,0.15);
+  overflow: hidden;
+}
+.sk-official-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+}
+.sk-official-card h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
+.sk-official-pos {
+  display: block;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 0.6rem;
+}
+.sk-official-committee {
+  display: inline-block;
+  background: rgba(42,157,107,0.08);
+  border: 1px solid rgba(42,157,107,0.2);
+  color: var(--gold);
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 100px;
+}
+
+/* ── PROGRAMS ── */
+.sk-programs-section {
+  background: var(--white);
+  padding: 4.5rem 3.5rem;
+}
+.sk-programs-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.sk-programs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.sk-program-card {
+  background: var(--light);
+  border-radius: 18px;
+  border: 1px solid rgba(15,31,46,0.07);
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.sk-program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15,31,46,0.09);
+  background: var(--white);
+}
+.sk-program-img {
+  height: 100px;
+}
+.sk-program-body {
+  padding: 1.25rem;
+}
+.sk-program-body h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.sk-program-body p {
+  font-size: 0.82rem;
+  color: var(--gray);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+.sk-program-status {
+  display: inline-block;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 100px;
+}
+.status-active {
+  background: rgba(42,157,107,0.1);
+  border: 1px solid rgba(42,157,107,0.25);
+  color: var(--gold);
+}
+
+/* ── EVENTS ── */
+.sk-events-section {
+  background: var(--cream);
+  padding: 4.5rem 3.5rem 5rem;
+}
+.sk-events-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.sk-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sk-event-item {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1px solid rgba(15,31,46,0.07);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  transition: all 0.2s;
+}
+.sk-event-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 8px 28px rgba(15,31,46,0.08);
+  border-color: rgba(42,157,107,0.2);
+}
+.sk-event-date {
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 52px;
+}
+.ev-month {
+  display: block;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+.ev-day {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+}
+.sk-event-divider {
+  width: 1px;
+  height: 48px;
+  background: rgba(15,31,46,0.1);
+  flex-shrink: 0;
+}
+.sk-event-info { flex: 1; }
+.sk-event-info h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.3rem;
+}
+.sk-event-info p {
+  font-size: 0.8rem;
+  color: var(--gray);
+  line-height: 1.5;
+}
+.sk-event-tag {
+  display: inline-block;
+  background: rgba(234,179,8,0.12);
+  border: 1px solid rgba(234,179,8,0.3);
+  color: #b45309;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* ── LOADING STATE ── */
+.sk-loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+/* ── IMAGE COLORS ── */
+.bg-green-grad { background: linear-gradient(135deg, #14532d, #16a34a); }

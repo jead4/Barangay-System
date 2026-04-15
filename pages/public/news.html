@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>News — Barangay Day-as</title>
+  <link rel="icon" href="../../favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/news.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a class="nav-brand" href="../../index.html">
+      <img src="../../assets/images/logo.png" alt="Logo" class="brgy-logo">
+      <span>Day-as Connect</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="officials.html">Officials</a></li>
+      <li><a href="news.html" class="active">News</a></li>
+      <li><a href="sk/sk.html">Sangguniang Kabataan</a></li>
+      <li><a href="#">More ▾</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="btn btn-ghost">Register</button>
+      <button class="btn btn-primary">Login</button>
+    </div>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="news-hero">
+    <div class="news-hero-inner">
+      <span class="news-hero-label">📰 Community Updates</span>
+      <h1>Barangay News &amp;<br>Announcements</h1>
+      <p>Stay informed with the latest updates, events, health advisories, and community announcements from Barangay Day-as.</p>
+    </div>
+  </section>
+
+  <!-- ══ FILTER TABS ══ -->
+  <div class="news-filter-bar">
+    <div class="news-filter-inner">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="announcements">Announcements</button>
+      <button class="filter-tab" data-filter="health">Health</button>
+      <button class="filter-tab" data-filter="projects">Projects</button>
+      <button class="filter-tab" data-filter="events">Events</button>
+      <button class="filter-tab" data-filter="alerts">Alerts</button>
+      <button class="filter-tab" data-filter="youth">Youth</button>
+    </div>
+  </div>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="news-main">
+    <div class="news-main-inner">
+
+      <!-- ALERT BANNER -->
+      <div class="news-alert">
+        <div class="news-alert-left">
+          <span class="news-alert-title">PUBLIC ADVISORY: Typhoon Signal #1 in Cebu</span>
+          <span class="news-alert-desc">Residents are advised to stay indoors. Barangay emergency response team is on standby.</span>
+        </div>
+        <span class="news-alert-time">Posted 1 hour ago</span>
+      </div>
+
+      <!-- FEATURED STORIES -->
+      <div class="news-section-heading">
+        <h2>Featured Stories</h2>
+      </div>
+
+      <div class="news-featured">
+
+        <!-- Big featured card -->
+        <div class="news-card-featured">
+          <div class="featured-img">
+            <div class="featured-img-placeholder bg-blue-grad"></div>
+          </div>
+          <div class="featured-body">
+            <span class="news-tag tag-infrastructure">Infrastructure</span>
+            <h3>Road Concreting Project Along Sitio Symwa Now 75% Complete</h3>
+            <p>The long-awaited road concreting project along the main road of Sitio Symva has reached 80% completion this week. Residents can expect the full project to be completed by end of March 2024, significantly improving mobility and flood drainage in the area.</p>
+            <span class="news-date">February 26, 2026</span>
+          </div>
+        </div>
+
+        <!-- Side cards -->
+        <div class="news-side-stack">
+
+          <div class="news-card-side">
+            <div class="side-img bg-green-grad"></div>
+            <div class="side-body">
+              <span class="news-tag tag-health">Health</span>
+              <h4>Free Vaccination Drive This Saturday at Barangay Hall</h4>
+              <p>Anti-flu and pneumonia vaccines available for senior citizens and children under 5.</p>
+              <span class="news-date">February 26, 2026</span>
+            </div>
+          </div>
+
+          <div class="news-card-side">
+            <div class="side-img bg-amber-grad"></div>
+            <div class="side-body">
+              <span class="news-tag tag-announcement">Announcement</span>
+              <h4>Barangay Clearance Now Available Online — No More Long Queues</h4>
+              <p>Residents can now request and track their barangay clearance through the portal.</p>
+              <span class="news-date">March 26, 2026</span>
+            </div>
+          </div>
+
+          <div class="news-card-side">
+            <div class="side-img bg-purple-grad"></div>
+            <div class="side-body">
+              <span class="news-tag tag-announcement">Announcement</span>
+              <h4>Barangay Fiesta 2024 — Schedule of Activities Announced</h4>
+              <p>Three days of cultural shows, sports, and community bonding starting April 5.</p>
+              <span class="news-date">March 26, 2026</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LATEST NEWS -->
+      <div class="news-section-heading">
+        <h2>Latest News</h2>
+      </div>
+
+      <div class="news-grid">
+
+        <div class="news-card-grid">
+          <div class="grid-img bg-green-grad"></div>
+          <div class="grid-body">
+            <span class="news-tag tag-youth">Youth</span>
+            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
+            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
+            <span class="news-date">February 26, 2026</span>
+          </div>
+        </div>
+
+        <div class="news-card-grid">
+          <div class="grid-img bg-teal-grad"></div>
+          <div class="grid-body">
+            <span class="news-tag tag-environment">Environment</span>
+            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
+            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
+            <span class="news-date">February 26, 2026</span>
+          </div>
+        </div>
+
+        <div class="news-card-grid">
+          <div class="grid-img bg-amber-grad"></div>
+          <div class="grid-body">
+            <span class="news-tag tag-cultural">Cultural</span>
+            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
+            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
+            <span class="news-date">February 26, 2026</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Day-as Connect</div>
+    <p>© 2024 Barangay Day-os — All rights reserved</p>
+    <p>Transparent · Accountable · Accessible</p>
+  </footer>
+
+  <script>
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
