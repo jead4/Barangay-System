@@ -231,3 +231,39 @@
   border-color: var(--gold);
   color: var(--gold-light);
 }
+
+/* ============================================================
+   RESPONSIVE — ABOUT PAGE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .about-hero   { padding: 7rem 2rem 4rem; }
+  .about-content { padding: 4rem 2rem; }
+  .about-stats  { padding: 4rem 2rem; }
+  .sitios-section { padding: 4rem 2rem; }
+}
+
+@media (max-width: 768px) {
+  .about-hero   { padding: 6rem 1.25rem 3rem; }
+  .about-hero h1 { font-size: 2.4rem; }
+
+  .about-content { padding: 3rem 1.25rem; }
+  .about-grid   { grid-template-columns: 1fr; }
+  .about-card   { padding: 1.75rem; }
+
+  .about-stats  { padding: 3rem 1.25rem; }
+  .about-stats-inner { max-width: 100%; }
+  .stats-grid   { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .stat-budget  { flex-direction: column; text-align: center; gap: 0.5rem; }
+  .stat-budget strong { font-size: 1.8rem; }
+  .budget-icon  { display: none; }
+
+  .sitios-section { padding: 3rem 1.25rem; }
+  .sitios-grid    { gap: 0.5rem; }
+  .sitio-chip     { padding: 8px 16px; font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+  .about-hero h1 { font-size: 2rem; }
+  .stats-grid    { grid-template-columns: 1fr; }
+  .stat-card     { padding: 1.25rem; }
+}
