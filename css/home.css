@@ -1,7 +1,7 @@
 /* ============================================================
    HOME.CSS — index.html specific styles
    ============================================================ */
-   
+
 
 /* ── HERO ── */
 .hero {
@@ -222,3 +222,71 @@
 .service-card h4  { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--white); margin-bottom: 0.5rem; }
 .service-card p   { font-size: 0.85rem; color: rgba(255,255,255,0.48); line-height: 1.6; }
 .service-card-arrow { display: inline-block; margin-top: 1rem; color: var(--gold-light); font-size: 0.8rem; font-weight: 600; }
+
+/* ============================================================
+   RESPONSIVE — HOME PAGE
+   ============================================================ */
+
+/* ── TABLET (max 1024px) ── */
+@media (max-width: 1024px) {
+  .hero-content   { padding: 0 2rem; gap: 2.5rem; }
+  .mv-section     { padding: 5rem 2rem; }
+  .mv-values      { grid-template-columns: repeat(2, 1fr); }
+  .services-section { padding: 4rem 2rem; }
+  .services-grid  { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── MOBILE (max 768px) ── */
+@media (max-width: 768px) {
+
+  /* Hero */
+  .hero { padding-top: 60px; min-height: auto; padding-bottom: 3rem; }
+  .hero-content {
+    grid-template-columns: 1fr;
+    padding: 2.5rem 1.25rem;
+    gap: 2rem;
+  }
+  .hero h1 { font-size: 2.4rem; }
+  .hero p  { max-width: 100%; margin-bottom: 1.5rem; }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .btn-hero-primary,
+  .btn-hero-ghost {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+  }
+
+  .service-pills { flex-wrap: wrap; gap: 0.5rem; }
+
+  /* Login card */
+  .hero-card { padding: 1.75rem; }
+  .hero-card h3 { font-size: 1.3rem; }
+
+  /* Mission & Vision */
+  .mv-section  { padding: 4rem 1.25rem; }
+  .mv-header   { margin-bottom: 2.5rem; }
+  .mv-cards    { grid-template-columns: 1fr; gap: 1.25rem; }
+  .mv-card     { padding: 2rem 1.5rem; }
+  .mv-card h3  { font-size: 1.5rem; }
+  .mv-values   { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .value-item  { padding: 1.25rem; }
+
+  /* Services */
+  .services-section { padding: 4rem 1.25rem; }
+  .services-section .section-sub { margin-bottom: 2rem; }
+  .services-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .service-card  { padding: 1.5rem; }
+}
+
+/* ── SMALL MOBILE (max 480px) ── */
+@media (max-width: 480px) {
+  .hero h1     { font-size: 2rem; }
+  .hero-label  { font-size: 0.65rem; }
+  .mv-values   { grid-template-columns: 1fr 1fr; }
+  .mv-card h3  { font-size: 1.35rem; }
+  .value-icon  { font-size: 1.6rem; }
+}
