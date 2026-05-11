@@ -60,26 +60,24 @@ function renderProfile(name, role) {
       <div class="nav-profile-dropdown" id="nav-dropdown">
         <a href="${role === 'admin' || role === 'barangay_worker'
           ? '/pages/public/admin/admindashboard.html'
-          : '/pages/resident/dashboard.html'}">
+          : '/pages/public/resident/dashboard.html'}">
           My Dashboard
         </a>
         <button id="logoutBtn">Logout</button>
       </div>
     </div>
   `
+  navCta.classList.add('ready')
 
-  // Toggle dropdown
   document.querySelector('.nav-profile').addEventListener('click', (e) => {
     document.getElementById('nav-dropdown').classList.toggle('open')
     e.stopPropagation()
   })
 
-  // Close dropdown when clicking outside
   document.addEventListener('click', () => {
     document.getElementById('nav-dropdown')?.classList.remove('open')
   })
 
-  // Logout
   document.getElementById('logoutBtn').addEventListener('click', async (e) => {
     e.stopPropagation()
     await supabase.auth.signOut()
@@ -96,6 +94,7 @@ function renderAuthButtons() {
     <button class="btn btn-ghost" id="navRegisterBtn">Register</button>
     <button class="btn btn-primary" id="navLoginBtn">Login</button>
   `
+  navCta.classList.add('ready')
 
   document.getElementById('navLoginBtn')
     .addEventListener('click', () => window.openModal('login'))
@@ -117,7 +116,7 @@ async function updateNavbar() {
         .from('user')
         .select('first_name, role')
         .eq('id', session.user.id)
-        .single()
+        .maybeSingle()
 
       const name = profile?.first_name || 'User'
       const role = profile?.role || 'resident'
@@ -141,7 +140,6 @@ document.addEventListener('keydown', (e) => {
 // ── MAIN ──
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Check auth state and update navbar on load
   updateNavbar()
 
   // ── LOGIN FORM ──
@@ -168,17 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return
       }
 
-      // Get profile using login response directly
       const { data: profile } = await supabase
         .from('user')
         .select('first_name, role')
         .eq('id', data.user.id)
-        .single()
+        .maybeSingle()
 
       const name = profile?.first_name || 'User'
       const role = profile?.role || 'resident'
 
-      // Close modal and render profile in navbar
       window.closeModal('modal-login')
       renderProfile(name, role)
     })
@@ -214,8 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled    = true
       btn.textContent = 'Creating account...'
 
-      // Step 1 — Create auth user
-      const { data, error } = await supabase.auth.signUp({ email, password })
+      // Create auth user with metadata
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name:     firstname,
+            last_name:      lastname,
+            contact_number: contact,
+            sitio:          sitio,
+          }
+        }
+      })
 
       if (error) {
         errorEl.textContent = error.message || 'Registration failed. Try again.'
@@ -224,29 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return
       }
 
-      // Step 2 — Save to user table
-      const { error: profileError } = await supabase
-        .from('user')
-        .insert({
-          id:             data.user.id,
-          first_name:     firstname,
-          last_name:      lastname,
-          email:          email,
-          contact_number: Number(contact),
-          sitio:          sitio,
-          role:           'resident'
-        })
-
-      if (profileError) {
-        errorEl.textContent = 'Profile save failed: ' + (profileError.message || JSON.stringify(profileError))
-        btn.disabled    = false
-        btn.textContent = 'Create Account'
-        return
-      }
-
-      // Success — switch to login modal
+      // Success
       errorEl.style.color = '#34d399'
-      errorEl.textContent = '✅ Account created! You can now login.'
+      errorEl.textContent = '✅ Account created! Please check your email to verify.'
       setTimeout(() => window.switchModal('modal-register', 'modal-login'), 1500)
     })
   }

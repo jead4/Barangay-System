@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Document Requests — Day-as Connect</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/documentstatus.css">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <!-- ── HERO ── -->
+  <section class="ds-hero">
+    <div class="ds-hero-bg"></div>
+    <div class="ds-hero-grid"></div>
+    <div class="ds-hero-inner">
+      <span class="page-hero-label">📋 My Requests</span>
+      <h1>Document Request Status</h1>
+      <p>Track the status of your submitted document requests.</p>
+    </div>
+  </section>
+
+  <!-- ── MAIN ── -->
+  <div class="ds-main">
+
+    <!-- Not logged in -->
+    <div class="ds-not-logged-in" id="not-logged-in">
+      <div class="ds-lock-icon">🔒</div>
+      <h2>Login Required</h2>
+      <p>You need to be logged in to view your requests.</p>
+      <a href="/index.html">Go to Login</a>
+    </div>
+
+    <!-- Logged in content -->
+    <div class="ds-content" id="ds-content" style="display:none;">
+
+      <!-- Stats Row -->
+      <div class="ds-stats" id="ds-stats">
+        <div class="ds-stat-card">
+          <span class="ds-stat-num" id="stat-total">0</span>
+          <span class="ds-stat-label">Total Requests</span>
+        </div>
+        <div class="ds-stat-card">
+          <span class="ds-stat-num pending" id="stat-pending">0</span>
+          <span class="ds-stat-label">Pending</span>
+        </div>
+        <div class="ds-stat-card">
+          <span class="ds-stat-num approved" id="stat-approved">0</span>
+          <span class="ds-stat-label">Approved</span>
+        </div>
+        <div class="ds-stat-card">
+          <span class="ds-stat-num rejected" id="stat-rejected">0</span>
+          <span class="ds-stat-label">Rejected</span>
+        </div>
+      </div>
+
+      <!-- New Request Button -->
+      <div class="ds-actions">
+        <h2>My Requests</h2>
+        <a href="/pages/public/resident/requestdocument.html" class="btn-new-request">
+          + New Request
+        </a>
+      </div>
+
+      <!-- Loading -->
+      <div class="ds-loading" id="ds-loading">
+        <div class="ds-spinner"></div>
+        <p>Loading your requests...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="ds-empty" id="ds-empty" style="display:none;">
+        <div class="ds-empty-icon">📭</div>
+        <h3>No requests yet</h3>
+        <p>You haven't submitted any document requests yet.</p>
+        <a href="/pages/public/resident/requestdocument.html" class="btn-new-request">
+          Request a Document
+        </a>
+      </div>
+
+      <!-- Requests Table -->
+      <div class="ds-table-wrap" id="ds-table-wrap" style="display:none;">
+        <table class="ds-table">
+          <thead>
+            <tr>
+              <th>Document Type</th>
+              <th>Purpose</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="ds-table-body">
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Day-as Connect</div>
+    <p>© 2024 Barangay Day-as — All rights reserved</p>
+    <p>Transparent · Accountable · Accessible</p>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script type="module" src="/js/navauth.js"></script>
+  <script type="module" src="/js/documentstatus.js"></script>
+
+</body>
+</html>

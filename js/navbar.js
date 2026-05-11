@@ -22,18 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function initNavbar() {
 
     // ── LOGO SWAP ──
-    // Check if current page is any SK page
     const currentPath = window.location.pathname;
     const isSKPage = currentPath.includes('/sk/') || currentPath.includes('sk.html');
 
     const logo = document.getElementById('nav-logo');
     if (logo) {
       if (isSKPage) {
-        // Swap to SK logo
         logo.src = '/assets/images/sk.jpg';
         logo.alt = 'SK Logo';
       } else {
-        // Use default barangay logo
         logo.src = '/assets/images/logo.png';
         logo.alt = 'Logo';
       }
@@ -42,10 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── ACTIVE LINK ──
     const currentPage = currentPath.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav-links a').forEach(link => {
+      // Skip the Services dropdown toggle
+      if (link.classList.contains('nav-dropdown-toggle')) return
+
       const linkPath = new URL(link.href).pathname;
       const linkPage = linkPath.split('/').pop();
 
-      // Match by filename
       if (linkPage === currentPage) {
         link.classList.add('active');
       }
@@ -95,6 +94,27 @@ document.addEventListener('DOMContentLoaded', () => {
           navLinks.classList.remove('open');
         }
       });
+    }
+
+    // ── SERVICES DROPDOWN ──
+    const dropdownItem   = document.querySelector('.nav-has-dropdown')
+    const dropdownToggle = document.querySelector('.nav-dropdown-toggle')
+
+    if (dropdownToggle && dropdownItem) {
+      // Mobile — toggle on click
+      dropdownToggle.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault()
+          dropdownItem.classList.toggle('open')
+        }
+      })
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!dropdownItem.contains(e.target)) {
+          dropdownItem.classList.remove('open')
+        }
+      })
     }
 
     // ── SITIO CHIPS ──

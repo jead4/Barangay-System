@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Request Document — Day-as Connect</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/requestdocument.css">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <!-- ── HERO ── -->
+  <section class="doc-hero">
+    <div class="doc-hero-bg"></div>
+    <div class="doc-hero-grid"></div>
+    <div class="doc-hero-inner">
+      <span class="page-hero-label">📄 Digital Services</span>
+      <h1>Request a Document</h1>
+      <p>Submit your document request online — fast, paperless, and trackable.</p>
+    </div>
+  </section>
+
+  <!-- ── MAIN ── -->
+  <div class="doc-main" id="doc-main">
+
+    <!-- FORM -->
+    <div class="doc-form-card" id="doc-form-card">
+      <h2>Document Request Form</h2>
+      <p>Fill out the form below and we'll process your request as soon as possible.</p>
+
+      <!-- Not logged in state -->
+      <div class="not-logged-in" id="not-logged-in">
+        <div class="lock-icon">🔒</div>
+        <h2>Login Required</h2>
+        <p>You need to be logged in to request a document. Please login or create an account first.</p>
+        <a href="/index.html">Go to Login</a>
+      </div>
+
+      <!-- Form (shown when logged in) -->
+      <form id="request-form" style="display:none;">
+
+        <div class="autofill-notice">
+          ✅ Your personal information has been auto-filled from your profile.
+        </div>
+
+        <!-- Document Type -->
+        <span class="doc-type-label">Select Document Type</span>
+        <div class="doc-types">
+
+          <div>
+            <input type="radio" name="doc_type" id="type-clearance"
+              class="doc-type-option" value="Barangay Clearance" checked>
+            <label class="doc-type-card" for="type-clearance">
+              <div class="doc-type-icon">📋</div>
+              <div class="doc-type-info">
+                <strong>Barangay Clearance</strong>
+                <span>For employment, business, or legal purposes</span>
+              </div>
+              <div class="doc-type-check"></div>
+            </label>
+          </div>
+
+          <div>
+            <input type="radio" name="doc_type" id="type-residency"
+              class="doc-type-option" value="Certificate of Residency">
+            <label class="doc-type-card" for="type-residency">
+              <div class="doc-type-icon">🏠</div>
+              <div class="doc-type-info">
+                <strong>Certificate of Residency</strong>
+                <span>Proof that you reside in Barangay Day-as</span>
+              </div>
+              <div class="doc-type-check"></div>
+            </label>
+          </div>
+
+          <div>
+            <input type="radio" name="doc_type" id="type-indigency"
+              class="doc-type-option" value="Indigency Certificate">
+            <label class="doc-type-card" for="type-indigency">
+              <div class="doc-type-icon">📜</div>
+              <div class="doc-type-info">
+                <strong>Indigency Certificate</strong>
+                <span>For financial assistance or scholarship applications</span>
+              </div>
+              <div class="doc-type-check"></div>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="full-name" placeholder="Auto-filled from profile"
+            readonly style="background:#f4f7f9; color:#5a6a7a;">
+        </div>
+
+        <!-- Purpose -->
+        <div class="form-group">
+          <label>Purpose</label>
+          <select id="purpose" required>
+            <option value="" disabled selected>Select purpose</option>
+            <option>Employment</option>
+            <option>Scholarship</option>
+            <option>Business Permit</option>
+            <option>Travel / Visa</option>
+            <option>Financial Assistance</option>
+            <option>School Enrollment</option>
+            <option>Legal Proceedings</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group">
+          <label>Additional Notes
+            <span style="color:#aab8c6; font-weight:400;">(Optional)</span>
+          </label>
+          <textarea id="notes"
+            placeholder="Any additional information or special instructions...">
+          </textarea>
+        </div>
+
+        <div class="form-error" id="form-error"></div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">
+          Submit Request →
+        </button>
+
+      </form>
+
+      <!-- Success Message -->
+      <div class="form-success" id="form-success">
+        <div class="success-icon">✅</div>
+        <h3>Request Submitted!</h3>
+        <p>Your document request has been submitted successfully. You can track the status in <strong>My Reports</strong>.</p>
+        <a href="/pages/public/resident/documentstatus.html" class="btn-track">
+          Track My Request →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="doc-sidebar">
+
+      <div class="sidebar-card">
+        <h3>📎 Requirements</h3>
+        <div class="req-list">
+          <div class="req-item">Valid Government ID</div>
+          <div class="req-item">Proof of Residency (if applicable)</div>
+          <div class="req-item">Completed online request form</div>
+          <div class="req-item">Pick up in person at the Barangay Hall</div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>📋 How It Works</h3>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <strong>Submit Request</strong>
+              <span>Fill out and submit this form</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Review & Approval</strong>
+              <span>Barangay staff reviews your request</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <strong>Notification</strong>
+              <span>You'll be notified when ready</span>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">4</div>
+            <div class="step-text">
+              <strong>Pick Up</strong>
+              <span>Claim your document at the Barangay Hall</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>⏱ Processing Time</h3>
+        <div class="processing-time">
+          <span>📅</span>
+          <div>
+            <strong>1 - 3 Business Days</strong>
+            <small>From submission to approval</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>🏛 Office Hours</h3>
+        <div class="req-list">
+          <div class="req-item">Monday – Friday: 8:00 AM – 5:00 PM</div>
+          <div class="req-item">Saturday: 8:00 AM – 12:00 PM</div>
+          <div class="req-item">Sunday & Holidays: Closed</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Day-as Connect</div>
+    <p>© 2024 Barangay Day-as — All rights reserved</p>
+    <p>Transparent · Accountable · Accessible</p>
+  </footer>
+
+  <script src="/js/navbar.js"></script>
+  <script type="module" src="/js/navauth.js"></script>
+  <script type="module" src="/js/requestdocument.js"></script>
+
+</body>
+</html>

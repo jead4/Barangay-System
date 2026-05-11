@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Dashboard — Day-as Connect</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <!-- ── DASHBOARD LAYOUT ── -->
+  <div class="dashboard-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <div class="dash-profile-card">
+        <div class="dash-avatar" id="dash-avatar">J</div>
+        <div class="dash-profile-info">
+          <strong id="dash-name">Loading...</strong>
+          <span id="dash-role">Resident</span>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="#overview" class="dash-nav-item active" data-section="overview">
+          <span>🏠</span> Overview
+        </a>
+        <a href="#documents" class="dash-nav-item" data-section="documents">
+          <span>📄</span> Document Requests
+        </a>
+        <a href="#blotters" class="dash-nav-item coming" data-section="blotters">
+          <span>🛡️</span> My Blotters
+          <small class="coming-badge">Soon</small>
+        </a>
+        <a href="#profile" class="dash-nav-item" data-section="profile">
+          <span>👤</span> My Profile
+        </a>
+      </nav>
+
+      <a href="/index.html" class="dash-back-link">← Back to Home</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main">
+
+      <!-- ── OVERVIEW SECTION ── -->
+      <section class="dash-section active" id="section-overview">
+        <div class="dash-section-header">
+          <div>
+            <h1>Welcome back, <span id="welcome-name">Resident</span>! 👋</h1>
+            <p>Here's an overview of your barangay activity.</p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="dash-stats">
+          <div class="dash-stat">
+            <div class="dash-stat-icon">📄</div>
+            <div class="dash-stat-info">
+              <span class="dash-stat-num" id="ov-total">0</span>
+              <span class="dash-stat-label">Total Requests</span>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon pending">⏳</div>
+            <div class="dash-stat-info">
+              <span class="dash-stat-num pending" id="ov-pending">0</span>
+              <span class="dash-stat-label">Pending</span>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon approved">✅</div>
+            <div class="dash-stat-info">
+              <span class="dash-stat-num approved" id="ov-approved">0</span>
+              <span class="dash-stat-label">Approved</span>
+            </div>
+          </div>
+          <div class="dash-stat">
+            <div class="dash-stat-icon rejected">❌</div>
+            <div class="dash-stat-info">
+              <span class="dash-stat-num rejected" id="ov-rejected">0</span>
+              <span class="dash-stat-label">Rejected</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dash-quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="dash-action-grid">
+            <a href="/pages/public/resident/requestdocument.html" class="dash-action-card">
+              <div class="dash-action-icon">📄</div>
+              <strong>Request Document</strong>
+              <span>Barangay clearance, residency & more</span>
+            </a>
+            <div class="dash-action-card disabled">
+              <div class="dash-action-icon">🛡️</div>
+              <strong>File a Blotter</strong>
+              <span>Coming soon</span>
+            </div>
+            <a href="/pages/public/news.html" class="dash-action-card">
+              <div class="dash-action-icon">📢</div>
+              <strong>View News</strong>
+              <span>Latest barangay updates</span>
+            </a>
+            <a href="/pages/public/officials.html" class="dash-action-card">
+              <div class="dash-action-icon">👥</div>
+              <strong>Officials</strong>
+              <span>Meet your barangay officials</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="dash-recent">
+          <div class="dash-recent-header">
+            <h3>Recent Document Requests</h3>
+            <a href="#documents" class="dash-view-all" onclick="switchSection('documents')">View all →</a>
+          </div>
+          <div id="recent-list">
+            <div class="dash-loading">
+              <div class="dash-spinner"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── DOCUMENTS SECTION ── -->
+      <section class="dash-section" id="section-documents">
+        <div class="dash-section-header">
+          <h1>Document Requests</h1>
+          <a href="/pages/public/resident/requestdocument.html" class="btn-new">+ New Request</a>
+        </div>
+        <div id="doc-list">
+          <div class="dash-loading">
+            <div class="dash-spinner"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── BLOTTERS SECTION ── -->
+      <section class="dash-section" id="section-blotters">
+        <div class="dash-section-header">
+          <h1>My Blotters</h1>
+        </div>
+        <div class="dash-coming-soon">
+          <div class="dash-coming-icon">🛡️</div>
+          <h3>Coming Soon</h3>
+          <p>Blotter filing and tracking will be available in a future update.</p>
+        </div>
+      </section>
+
+      <!-- ── PROFILE SECTION ── -->
+      <section class="dash-section" id="section-profile">
+        <div class="dash-section-header">
+          <h1>My Profile</h1>
+          <p>Your personal information registered with Barangay Day-as.</p>
+        </div>
+        <div class="dash-profile-wrap">
+          <div class="dash-profile-detail">
+            <div class="dash-profile-avatar-lg" id="profile-avatar-lg">J</div>
+            <div class="dash-profile-fields" id="profile-fields">
+              <div class="dash-loading"><div class="dash-spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/navbar.js"></script>
+  <script type="module" src="/js/navauth.js"></script>
+  <script type="module" src="/js/dashboard.js"></script>
+
+</body>
+</html>

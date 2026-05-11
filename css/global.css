@@ -390,3 +390,129 @@ footer p { color: rgba(255, 255, 255, 0.28); font-size: 0.8rem; }
 .nav-cta.ready {
   opacity: 1;
 }
+
+/* ── SERVICES DROPDOWN ── */
+.nav-has-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.nav-submenu {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f1f2e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 0.5rem;
+  min-width: 260px;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(8px);
+  transition: all 0.2s ease;
+  z-index: 200;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* Arrow pointer */
+.nav-submenu::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px; height: 12px;
+  background: #0f1f2e;
+  border-left: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.nav-has-dropdown:hover .nav-submenu,
+.nav-has-dropdown.open .nav-submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-submenu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.75) !important;
+  text-decoration: none;
+  transition: all 0.15s;
+  font-size: 0.875rem !important;
+}
+
+.nav-submenu li a:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--white) !important;
+}
+
+.submenu-icon {
+  font-size: 1.25rem;
+  width: 36px; height: 36px;
+  background: rgba(42,157,107,0.1);
+  border: 1px solid rgba(42,157,107,0.2);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.submenu-text strong {
+  display: block;
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.submenu-text small {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+}
+
+/* ── MOBILE SUBMENU ── */
+@media (max-width: 768px) {
+  .nav-submenu {
+    position: static;
+    transform: none !important;
+    opacity: 1;
+    visibility: visible;
+    background: rgba(255,255,255,0.03);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    display: none;
+  }
+
+  .nav-submenu::before { display: none; }
+
+  .nav-has-dropdown.open .nav-submenu {
+    display: block;
+  }
+
+  .nav-submenu li a {
+    padding: 0.85rem 2rem !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .nav-dropdown-toggle {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    justify-content: space-between;
+  }
+}
