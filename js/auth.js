@@ -1,5 +1,5 @@
 /* ============================================================
-   AUTH.JS — Supabase Login & Register
+   AUTH.JS — Supabase Login & Register with Role Redirect
    Place in: js/auth.js
    ============================================================ */
 
@@ -47,6 +47,17 @@ function clearErrors() {
   })
 }
 
+// ── REDIRECT BASED ON ROLE ──
+function redirectByRole(role) {
+  console.log('Redirecting for role:', role) // debug
+
+  if (role === 'admin') {
+    window.location.href = '/pages/public/admin/admindashboard.html'
+  } else {
+    window.location.href = '/pages/public/resident/dashboard.html'
+  }
+}
+
 // ── RENDER PROFILE IN NAVBAR ──
 function renderProfile(name, role) {
   const initial = name.charAt(0).toUpperCase()
@@ -58,7 +69,7 @@ function renderProfile(name, role) {
       <div class="nav-avatar">${initial}</div>
       <span class="nav-username">${name}</span>
       <div class="nav-profile-dropdown" id="nav-dropdown">
-        <a href="${role === 'admin' || role === 'barangay_worker'
+        <a href="${role === 'admin'
           ? '/pages/public/admin/admindashboard.html'
           : '/pages/public/resident/dashboard.html'}">
           My Dashboard
@@ -85,7 +96,7 @@ function renderProfile(name, role) {
   })
 }
 
-// ── RENDER LOGIN/REGISTER BUTTONS ──
+// ── RENDER AUTH BUTTONS ──
 function renderAuthButtons() {
   const navCta = document.querySelector('.nav-cta')
   if (!navCta) return
@@ -97,35 +108,34 @@ function renderAuthButtons() {
   navCta.classList.add('ready')
 
   document.getElementById('navLoginBtn')
-    .addEventListener('click', () => window.openModal('login'))
+    ?.addEventListener('click', () => window.openModal('login'))
   document.getElementById('navRegisterBtn')
-    .addEventListener('click', () => window.openModal('register'))
+    ?.addEventListener('click', () => window.openModal('register'))
 }
 
-// ── UPDATE NAVBAR BASED ON AUTH STATE ──
+// ── UPDATE NAVBAR ──
 async function updateNavbar() {
   const { data: { session } } = await supabase.auth.getSession()
 
-  const interval = setInterval(async () => {
+  const interval = setInterval(() => {
     const navCta = document.querySelector('.nav-cta')
     if (!navCta) return
     clearInterval(interval)
 
     if (session) {
-      const { data: profile } = await supabase
+      supabase
         .from('user')
         .select('first_name, role')
         .eq('id', session.user.id)
         .maybeSingle()
-
-      const name = profile?.first_name || 'User'
-      const role = profile?.role || 'resident'
-
-      renderProfile(name, role)
+        .then(({ data: profile }) => {
+          const name = profile?.first_name || 'User'
+          const role = profile?.role || 'resident'
+          renderProfile(name, role)
+        })
     } else {
       renderAuthButtons()
     }
-
   }, 100)
 }
 
@@ -157,26 +167,56 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled    = true
       btn.textContent = 'Logging in...'
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+      // Step 1 — Sign in with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
 
-      if (error) {
+      if (authError) {
         errorEl.textContent = 'Invalid email or password. Please try again.'
         btn.disabled    = false
         btn.textContent = 'Login →'
         return
       }
 
-      const { data: profile } = await supabase
+      // Step 2 — Fetch role from your "user" table
+      const { data: profile, error: profileError } = await supabase
         .from('user')
-        .select('first_name, role')
-        .eq('id', data.user.id)
+        .select('first_name, last_name, role')
+        .eq('id', authData.user.id)
         .maybeSingle()
 
-      const name = profile?.first_name || 'User'
-      const role = profile?.role || 'resident'
+      if (profileError || !profile) {
+        errorEl.textContent = 'Could not load your profile. Please try again.'
+        btn.disabled    = false
+        btn.textContent = 'Login →'
+        return
+      }
 
+      // Step 2.5 — Check selected role tab matches actual role in DB
+      const selectedRole = document.getElementById('login-role').value
+      if (selectedRole === 'admin' && profile.role !== 'admin') {
+        // Resident trying to log in as admin
+        await supabase.auth.signOut()
+        errorEl.textContent = '❌ Access denied. You do not have admin privileges.'
+        btn.disabled    = false
+        btn.textContent = 'Login →'
+        return
+      }
+
+      // Step 3 — Store user info
+      localStorage.setItem('user', JSON.stringify({
+        id:         authData.user.id,
+        first_name: profile.first_name,
+        last_name:  profile.last_name,
+        role:       profile.role,
+        email:      authData.user.email
+      }))
+
+      // Step 4 — Redirect based on role
       window.closeModal('modal-login')
-      renderProfile(name, role)
+      redirectByRole(profile.role)
     })
   }
 
@@ -210,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled    = true
       btn.textContent = 'Creating account...'
 
-      // Create auth user with metadata
+      // Sign up with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -231,10 +271,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return
       }
 
-      // Success
+      // Insert into your "user" table
+      const { error: insertError } = await supabase.from('user').insert({
+        id:             data.user.id,
+        first_name:     firstname,
+        last_name:      lastname,
+        email:          email,
+        contact_number: contact,
+        sitio:          sitio,
+        role:           'resident'
+      })
+
+      if (insertError) {
+        console.error('Insert error:', insertError)
+      }
+
       errorEl.style.color = '#34d399'
-      errorEl.textContent = '✅ Account created! Please check your email to verify.'
-      setTimeout(() => window.switchModal('modal-register', 'modal-login'), 1500)
+      errorEl.textContent = '✅ Account created! Please check your email to verify, then login.'
+      btn.disabled    = false
+      btn.textContent = 'Create Account'
+      setTimeout(() => window.switchModal('modal-register', 'modal-login'), 2000)
     })
   }
 
