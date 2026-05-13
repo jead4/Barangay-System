@@ -134,7 +134,18 @@ document.getElementById('news-modal').addEventListener('click', e => {
 })
 
 window.logout = async () => { await supabase.auth.signOut(); localStorage.clear(); window.location.href = '/index.html' }
-window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open')
+window.toggleSidebar = () => {
+  document.getElementById('sidebar').classList.toggle('open')
+}
+
+// Close sidebar when clicking a link on mobile
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('open')
+    }
+  })
+})
 
 loadNews()
 
@@ -157,10 +168,3 @@ window.confirmDeleteAction = async () => {
   if (_deleteCallback) await _deleteCallback()
   closeDeleteConfirm()
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const m = document.getElementById('delete-confirm-modal')
-  if (m) m.addEventListener('click', e => {
-    if (e.target.id === 'delete-confirm-modal') closeDeleteConfirm()
-  })
-})

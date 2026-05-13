@@ -389,29 +389,27 @@
   .admin-form-row { grid-template-columns: 1fr; }
   .doc-detail-grid { grid-template-columns: 1fr; }
 }
-/* ============================================================
-   ADMIN PATCH — Paste at the BOTTOM of your css/admin.css
-   Fixes: missing buttons, nav conflicts, layout issues
-   ============================================================ */
 
-/* ── FIX: Prevent global.css nav from affecting admin pages ── */
-.admin-body nav {
-  display: none !important;
-}
-
-/* ── FIX: Topbar layout ── */
+/* ── TOPBAR BUTTON FIX ── */
 .admin-topbar {
-  flex-wrap: nowrap !important;
-  overflow: visible !important;
-  gap: 1rem;
+  flex-wrap: nowrap;
+  overflow: visible;
 }
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.admin-topbar .btn-admin-primary {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.admin-topbar .topbar-left {
   flex: 1;
   min-width: 0;
 }
+.admin-topbar .topbar-left h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── TOPBAR RIGHT ── */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -419,86 +417,324 @@
   flex-shrink: 0;
 }
 
-/* ── FIX: Buttons always visible in topbar ── */
-.admin-topbar .btn-admin-primary,
-.admin-topbar .btn-admin-ghost {
-  flex-shrink: 0;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  visibility: visible !important;
-  opacity: 1 !important;
+/* ============================================================
+   FULL MOBILE RESPONSIVE — Admin Panel
+   ============================================================ */
+
+/* ── TABLET (max 1024px) ── */
+@media (max-width: 1024px) {
+  .admin-sidebar { width: 220px; }
+  .admin-main    { margin-left: 220px; }
+
+  .admin-stats   { grid-template-columns: repeat(2, 1fr); padding: 1.25rem 1.5rem; }
+  .quick-actions { grid-template-columns: repeat(3, 1fr); padding: 0 1.5rem 1.5rem; }
+
+  .admin-topbar        { padding: 1rem 1.5rem; }
+  .admin-table-wrap    { padding: 0 1.5rem 1.5rem; }
+  .admin-filter-bar    { padding: 0 1.5rem 1rem; }
+  .admin-section-title { padding: 0 1.5rem 1rem; }
+
+  /* Residents stats */
+  .residents-stats { padding: 1.25rem 1.5rem 0; }
+
+  /* Doc req stats */
+  .doc-req-stats { padding: 1.25rem 1.5rem 0; }
 }
 
-/* ── FIX: admin-main takes full width properly ── */
-.admin-body {
-  display: flex !important;
-  padding-top: 0 !important;
-}
-.admin-main {
-  flex: 1;
-  margin-left: 260px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-}
-
-/* ── SK TAB STYLES ── */
-.sk-tab {
-  padding: 0.85rem 1.5rem;
-  background: none; border: none;
-  font-size: 0.9rem; font-weight: 600;
-  color: var(--gray); cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
-  margin-bottom: -2px;
-}
-.sk-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
-.sk-tab:hover  { color: var(--navy); }
-
-/* ── BTN WARNING ── */
-.btn-admin-warning {
-  background: rgba(234,179,8,0.1);
-  border: 1px solid rgba(234,179,8,0.3);
-  color: #b45309; border-radius: 8px;
-  padding: 9px 16px; font-size: 0.82rem; font-weight: 600;
-  cursor: pointer; transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
-}
-.btn-admin-warning:hover { background: rgba(234,179,8,0.18); }
-
-/* ── RESPONSIVE FIX ── */
+/* ── MOBILE (max 768px) ── */
 @media (max-width: 768px) {
-  .admin-main { margin-left: 0; }
-  .admin-sidebar { transform: translateX(-260px); }
+
+  /* Sidebar hidden by default, slides in */
+  .admin-sidebar {
+    width: 260px;
+    transform: translateX(-260px);
+    z-index: 200;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+  }
   .admin-sidebar.open { transform: translateX(0); }
+  .admin-main { margin-left: 0; }
+
+  /* Sidebar overlay when open */
+  .admin-sidebar.open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    left: 260px;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+  }
+
+  /* Show hamburger */
   .sidebar-toggle { display: block !important; }
+
+  /* ── TOPBAR ── */
+  .admin-topbar {
+    padding: 0.85rem 1rem;
+    gap: 0.75rem;
+  }
+  .topbar-title { font-size: 1.2rem !important; }
+  .topbar-sub   { display: none; }
+  .topbar-date  { display: none; }
+
+  /* Add button in topbar — smaller on mobile */
+  .topbar-right .btn-admin-primary {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+  }
+
+  /* ── STATS ── */
+  .admin-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .stat-card-admin { padding: 1rem; }
+  .stat-card-value { font-size: 1.6rem; }
+  .stat-card-icon  { width: 40px; height: 40px; font-size: 1.1rem; border-radius: 10px; }
+
+  /* ── QUICK ACTIONS ── */
+  .quick-actions {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 0 1rem 1rem;
+  }
+  .quick-action-card { padding: 1rem 0.5rem; }
+  .quick-action-card span { font-size: 1.4rem; }
+  .quick-action-card div  { font-size: 0.7rem; }
+
+  /* ── SECTION TITLE ── */
+  .admin-section-title { padding: 0 1rem 0.75rem; font-size: 1rem; }
+
+  /* ── FILTER BAR ── */
+  .admin-filter-bar {
+    padding: 0 1rem 0.75rem;
+    gap: 0.4rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .admin-filter-bar::-webkit-scrollbar { display: none; }
+  .filter-chip { flex-shrink: 0; padding: 5px 12px; font-size: 0.78rem; }
+
+  /* ── TABLE ── */
+  .admin-table-wrap {
+    padding: 0 1rem 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-table { min-width: 580px; }
+  .admin-table th { padding: 0.75rem 1rem; font-size: 0.65rem; }
+  .admin-table td { padding: 0.75rem 1rem; font-size: 0.82rem; }
+  .table-empty    { padding: 2rem !important; }
+
+  /* Hide less important columns on mobile */
+  .admin-table th:nth-child(3),
+  .admin-table td:nth-child(3) { display: none; }
+
+  /* ── MODAL ── */
+  .admin-modal {
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0;
+    margin-top: auto;
+    max-height: 85vh;
+  }
+  .admin-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .admin-modal-overlay.open .admin-modal { transform: translateY(0); }
+  .admin-modal-form  { padding: 1.25rem; gap: 0.85rem; }
+  .admin-form-row    { grid-template-columns: 1fr; }
+  .admin-modal-header { padding: 1.25rem; }
+  .admin-modal-footer { padding: 1rem 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
+  .admin-modal-footer button { flex: 1; min-width: 120px; }
+
+  /* ── DOC DETAIL GRID ── */
+  .doc-detail-grid { grid-template-columns: 1fr; padding: 1rem 1.25rem; gap: 0.75rem; }
+
+  /* ── RESIDENTS STATS ── */
+  .residents-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem 1rem 0;
+  }
+  .res-stat-card { padding: 1rem; }
+  .residents-search { width: 100%; }
+  .residents-search input { width: 100%; }
+
+  /* ── DOC REQ STATS ── */
+  .doc-req-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 1rem 1rem 0;
+  }
+  .doc-stat-card { padding: 1rem; }
+  .doc-stat-num  { font-size: 1.5rem; }
+
+  /* ── SK TABS ── */
+  .sk-tab { padding: 0.75rem 1rem; font-size: 0.82rem; }
+
+  /* Tab content header with button */
+  #tab-programs > div,
+  #tab-events > div {
+    padding: 1rem 1rem 0.75rem !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Delete confirm modal — centered on mobile */
+  #delete-confirm-modal .admin-modal {
+    border-radius: 16px;
+    margin: auto;
+    max-width: 340px;
+  }
+  #delete-confirm-modal.admin-modal-overlay {
+    align-items: center;
+    padding: 1rem;
+  }
 }
 
-/* ── FIX: Prevent global.css from styling admin sidebar nav ── */
+/* ── SMALL MOBILE (max 480px) ── */
+@media (max-width: 480px) {
+  .admin-stats { grid-template-columns: 1fr; }
+
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-card-admin { gap: 0.75rem; }
+  .stat-card-value { font-size: 1.4rem; }
+
+  .doc-req-stats { grid-template-columns: 1fr 1fr; }
+
+  .admin-topbar .topbar-right .btn-admin-primary {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  /* Table — show even fewer columns */
+  .admin-table th:nth-child(4),
+  .admin-table td:nth-child(4) { display: none; }
+}
+
+/* ============================================================
+   CRITICAL FIX — Prevent global.css nav styles from
+   affecting the admin sidebar nav
+   ============================================================ */
+
+/* Override global.css "nav { position: fixed; ... }" */
+.admin-body nav,
 .admin-sidebar nav,
 .admin-sidebar .sidebar-nav {
   position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
   height: auto !important;
+  min-height: unset !important;
   background: transparent !important;
   backdrop-filter: none !important;
   border-bottom: none !important;
   padding: 1rem 0 !important;
+  z-index: auto !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
-  z-index: auto !important;
+  box-shadow: none !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
 }
 
-/* ── FIX: admin-main must not have padding-top from navbar ── */
-.admin-body .admin-main {
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-}
-
-/* ── FIX: body padding-top reset for admin ── */
+/* Prevent body padding-top from navbar affecting admin */
 .admin-body {
   padding-top: 0 !important;
+}
+
+/* Admin main must not be offset by the public navbar height */
+.admin-body .admin-main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Hide public navbar if it accidentally loads on admin pages */
+.admin-body > nav:not(.sidebar-nav) {
+  display: none !important;
+}
+
+/* ============================================================
+   MOBILE BUTTON FIX — Topbar buttons visible on small screens
+   ============================================================ */
+@media (max-width: 600px) {
+
+  /* Topbar wraps on very small screens */
+  .admin-topbar {
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem 1rem !important;
+  }
+
+  .topbar-left {
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-right {
+    flex: 1 1 100% !important;
+    justify-content: flex-end !important;
+  }
+
+  /* Full width button on mobile */
+  .topbar-right .btn-admin-primary {
+    width: 100% !important;
+    padding: 10px 16px !important;
+    font-size: 0.875rem !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  /* SK tab programs/events add button */
+  #tab-programs > div,
+  #tab-events > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+  }
+
+  #tab-programs > div .btn-admin-primary,
+  #tab-events > div .btn-admin-primary {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Table actions stack vertically */
+  .table-actions {
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+  }
+  .btn-table-edit,
+  .btn-table-delete,
+  .btn-table-view {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Filter bar horizontal scroll */
+  .admin-filter-bar {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Modal full screen on tiny phones */
+  .admin-modal {
+    max-height: 92vh !important;
+  }
+
+  /* Residents search full width */
+  .topbar-right .residents-search,
+  .topbar-right .residents-search input {
+    width: 100% !important;
+  }
 }

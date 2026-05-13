@@ -31,7 +31,7 @@ async function loadRequests() {
   if (userIds.length) {
     const { data: users } = await supabase
       .from('user')
-      .select('id, first_name, last_name, contact_number')
+      .select('id, first_name, last_name, contact_number, email')
       .in('id', userIds)
 
     if (users) users.forEach(u => { usersMap[u.id] = u })
@@ -116,60 +116,110 @@ window.saveDocStatus = async () => {
   const newStatus = document.getElementById('doc-new-status').value
   const remarks   = document.getElementById('doc-remarks').value.trim()
   const errorEl   = document.getElementById('doc-error')
+  const btn       = document.querySelector('#doc-modal .btn-admin-primary')
   errorEl.textContent = ''
-
-  const updateData = {
-    status:       newStatus,
-    approved_by:  user.id,
-  }
+  btn.disabled = true
+  btn.textContent = 'Saving...'
 
   const { error } = await supabase
     .from('document_requests')
-    .update(updateData)
-    .eq('id', id)
-
-  if (error) { errorEl.textContent = error.message; return }
-
-  closeDocModal()
-  loadRequests()
-}
-
-// ── DELETE REQUEST (custom modal) ──
-window.deleteDocRequest = () => {
-  const id   = document.getElementById('doc-id').value
-  const name = document.getElementById('doc-resident').textContent
-  document.getElementById('confirm-delete-name').textContent = name
-  document.getElementById('delete-pending-id').value = id
-  document.getElementById('delete-confirm-modal').classList.add('open')
-}
-
-window.closeDeleteConfirm = () => {
-  document.getElementById('delete-confirm-modal').classList.remove('open')
-}
-
-window.confirmDelete = async () => {
-  const id      = document.getElementById('delete-pending-id').value
-  const errorEl = document.getElementById('doc-error')
-
-  const { error } = await supabase
-    .from('document_requests')
-    .delete()
+    .update({ status: newStatus, approved_by: user.id })
     .eq('id', id)
 
   if (error) {
-    closeDeleteConfirm()
     errorEl.textContent = error.message
+    btn.disabled = false
+    btn.textContent = 'Save Changes'
     return
   }
 
-  closeDeleteConfirm()
+  // ── SEND EMAIL if approved or released ──
+  if (['approved', 'released'].includes(newStatus)) {
+    const req         = allRequests.find(r => r.id === id)
+    const u           = usersMap[req?.user_id]
+    const residentEmail = u?.email || null
+    const residentName  = u ? `${u.first_name} ${u.last_name}` : 'Resident'
+    const docType       = req?.type || 'Document'
+
+    if (residentEmail) {
+      try {
+        const res = await supabase.functions.invoke('send-document-email', {
+          body: {
+            resident_email: residentEmail,
+            resident_name:  residentName,
+            document_type:  docType,
+            status:         newStatus,
+            remarks:        remarks || null
+          }
+        })
+        console.log('Email sent:', res)
+        showEmailToast(residentEmail, newStatus)
+      } catch (emailErr) {
+        console.warn('Email failed (non-critical):', emailErr)
+        showEmailToast(null, newStatus)
+      }
+    } else {
+      showEmailToast(null, newStatus)
+    }
+  }
+
+  btn.disabled = false
+  btn.textContent = 'Save Changes'
   closeDocModal()
   loadRequests()
+}
+
+// ── EMAIL TOAST NOTIFICATION ──
+function showEmailToast(email, status) {
+  const existing = document.getElementById('email-toast')
+  if (existing) existing.remove()
+
+  const toast = document.createElement('div')
+  toast.id = 'email-toast'
+  const msg = email
+    ? `📧 Email sent to ${email}`
+    : `⚠️ No email found — notify resident manually`
+  const bg = email ? '#2a9d6b' : '#b45309'
+
+  toast.style.cssText = `
+    position:fixed; bottom:24px; right:24px; z-index:9999;
+    background:${bg}; color:#fff; padding:14px 20px;
+    border-radius:12px; font-size:0.875rem; font-weight:600;
+    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+    display:flex; align-items:center; gap:10px;
+    animation: slideIn 0.3s ease;
+    max-width: 360px;
+  `
+  toast.innerHTML = msg
+  document.body.appendChild(toast)
+  setTimeout(() => toast.remove(), 4000)
+}
+
+window.deleteDocRequest = () => {
+  const id   = document.getElementById('doc-id').value
+  const name = document.getElementById('doc-resident').textContent
+  showDeleteConfirm(`Delete the document request for ${name}?`, async () => {
+    const { error } = await supabase.from('document_requests').delete().eq('id', id)
+    if (error) { document.getElementById('doc-error').textContent = error.message; return }
+    closeDocModal()
+    loadRequests()
+  })
 }
 
 // ── SIDEBAR / LOGOUT ──
 window.logout        = async () => { await supabase.auth.signOut(); localStorage.clear(); window.location.href = '/index.html' }
-window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open')
+window.toggleSidebar = () => {
+  document.getElementById('sidebar').classList.toggle('open')
+}
+
+// Close sidebar when clicking a link on mobile
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('open')
+    }
+  })
+})
 
 document.getElementById('delete-confirm-modal')?.addEventListener('click', e => {
   if (e.target === document.getElementById('delete-confirm-modal')) closeDeleteConfirm()
@@ -180,3 +230,23 @@ document.getElementById('doc-modal').addEventListener('click', e => {
 })
 
 loadRequests()
+
+
+// ── CUSTOM DELETE CONFIRM MODAL ──
+let _deleteCallback = null
+
+window.showDeleteConfirm = (message, callback) => {
+  document.getElementById('confirm-delete-message').textContent = message
+  _deleteCallback = callback
+  document.getElementById('delete-confirm-modal').classList.add('open')
+}
+
+window.closeDeleteConfirm = () => {
+  document.getElementById('delete-confirm-modal').classList.remove('open')
+  _deleteCallback = null
+}
+
+window.confirmDeleteAction = async () => {
+  if (_deleteCallback) await _deleteCallback()
+  closeDeleteConfirm()
+}

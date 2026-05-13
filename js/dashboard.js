@@ -1,155 +1,159 @@
 /* ============================================================
-   DASHBOARD.JS — Resident Dashboard
-   Place in: js/dashboard.js
+   DASHBOARD.JS — Admin Dashboard
+   Table names: "user", document_requests
+   Columns: user_id, type, purpose, status, created_at
    ============================================================ */
-
 import { supabase } from '/js/supabase.js'
 
-// ── SECTION SWITCHER ──
-window.switchSection = function(name) {
-  document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'))
-  document.querySelectorAll('.dash-nav-item').forEach(n => n.classList.remove('active'))
-  document.getElementById('section-' + name)?.classList.add('active')
-  document.querySelector(`[data-section="${name}"]`)?.classList.add('active')
+// ── AUTH CHECK ──
+const user = JSON.parse(localStorage.getItem('user'))
+if (!user || user.role !== 'admin') {
+  window.location.href = '/index.html'
 }
 
-// ── HELPERS ──
-function formatDate(dateStr) {
-  if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('en-PH', {
-    year: 'numeric', month: 'short', day: 'numeric'
-  })
+// ── SET ADMIN NAME & AVATAR ──
+document.getElementById('admin-name').textContent   = user.first_name || 'Admin'
+document.getElementById('topbar-name').textContent  = user.first_name || 'Admin'
+document.getElementById('admin-avatar').textContent = (user.first_name || 'A')[0].toUpperCase()
+
+// ── DATE ──
+document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-PH', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+})
+
+// ── LOAD STATS ──
+async function loadStats() {
+
+  // Total residents
+  const { count: residentCount, error: e1 } = await supabase
+    .from('user')
+    .select('*', { count: 'exact', head: true })
+    .eq('role', 'resident')
+
+  if (e1) console.error('Residents error:', e1.message)
+
+  // Pending requests
+  const { count: pendingCount, error: e2 } = await supabase
+    .from('document_requests')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending')
+
+  if (e2) console.error('Pending error:', e2.message)
+
+  // News count
+  const { count: newsCount, error: e3 } = await supabase
+    .from('news')
+    .select('*', { count: 'exact', head: true })
+
+  if (e3) console.error('News error:', e3.message)
+
+  // Active projects
+  const { count: projectCount, error: e4 } = await supabase
+    .from('projects')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'ongoing')
+
+  if (e4) console.error('Projects error:', e4.message)
+
+  // Update UI
+  document.getElementById('stat-residents').textContent = residentCount ?? 0
+  document.getElementById('stat-pending').textContent   = pendingCount  ?? 0
+  document.getElementById('stat-news').textContent      = newsCount     ?? 0
+  document.getElementById('stat-projects').textContent  = projectCount  ?? 0
+
+  // Sidebar pending badge
+  const badge = document.getElementById('pending-badge')
+  if (badge) badge.textContent = pendingCount ?? 0
 }
 
-function getDocIcon(type) {
-  if (type?.includes('Clearance'))  return '📋'
-  if (type?.includes('Residency'))  return '🏠'
-  if (type?.includes('Indigency'))  return '📜'
-  return '📄'
-}
+// ── LOAD RECENT DOCUMENT REQUESTS ──
+async function loadRecentRequests() {
+  // Step 1 — fetch document requests
+  const { data: requests, error } = await supabase
+    .from('document_requests')
+    .select('id, type, purpose, status, created_at, user_id')
+    .order('created_at', { ascending: false })
+    .limit(6)
 
-function statusBadge(status) {
-  const s = (status || 'pending').toLowerCase()
-  return `<span class="status-badge ${s}">${s}</span>`
-}
+  if (error) console.error('Document requests error:', error.message)
 
-function buildRequestCard(r) {
-  return `
-    <div class="request-card">
-      <div class="request-card-left">
-        <div class="request-card-icon">${getDocIcon(r.type)}</div>
-        <div class="request-card-info">
-          <strong>${r.type || 'Document Request'}</strong>
-          <span>${r.purpose || '—'}</span>
-        </div>
-      </div>
-      <div class="request-card-right">
-        <span class="request-date">${formatDate(r.created_at)}</span>
-        ${statusBadge(r.status)}
-      </div>
-    </div>
-  `
-}
+  const tbody = document.getElementById('recent-requests')
 
-function buildEmptyState() {
-  return `
-    <div class="dash-empty">
-      <div class="dash-empty-icon">📭</div>
-      <h3>No requests yet</h3>
-      <p>You haven't submitted any document requests yet.</p>
-      <a href="/pages/public/resident/requestdocument.html" class="btn-new">
-        Request a Document
-      </a>
-    </div>
-  `
-}
-
-// ── MAIN ──
-async function initDashboard() {
-  // ── Attach nav listeners HERE (inside DOMContentLoaded) so all elements exist ──
-  document.querySelectorAll('.dash-nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault()
-      const section = item.dataset.section
-      if (section) window.switchSection(section)
-    })
-  })
-
-  const { data: { session } } = await supabase.auth.getSession()
-
-  if (!session) {
-    window.location.href = '/index.html'
+  if (error || !requests?.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="table-empty">No document requests yet.</td></tr>`
     return
   }
 
-  // Get profile
-  const { data: profile } = await supabase
-    .from('user')
-    .select('first_name, last_name, email, contact_number, sitio, role')
-    .eq('id', session.user.id)
-    .maybeSingle()
+  // Step 2 — fetch user names separately to avoid reserved word join issue
+  const userIds = [...new Set(requests.map(r => r.user_id).filter(Boolean))]
+  let usersMap = {}
 
-  const name    = profile ? `${profile.first_name} ${profile.last_name}` : 'Resident'
-  const initial = (profile?.first_name || 'R').charAt(0).toUpperCase()
-  const role    = profile?.role || 'resident'
+  if (userIds.length > 0) {
+    const { data: users } = await supabase
+      .from('user')
+      .select('id, first_name, last_name')
+      .in('id', userIds)
 
-  // Update sidebar profile
-  document.getElementById('dash-avatar').textContent        = initial
-  document.getElementById('dash-name').textContent          = name
-  document.getElementById('dash-role').textContent          = role
-  document.getElementById('welcome-name').textContent       = profile?.first_name || 'Resident'
-  document.getElementById('profile-avatar-lg').textContent  = initial
+    if (users) {
+      users.forEach(u => { usersMap[u.id] = u })
+    }
+  }
 
-  // Load profile fields
-  document.getElementById('profile-fields').innerHTML = `
-    <div class="profile-field">
-      <span class="profile-field-label">Full Name</span>
-      <span class="profile-field-value">${name}</span>
-    </div>
-    <div class="profile-field">
-      <span class="profile-field-label">Email</span>
-      <span class="profile-field-value">${profile?.email || session.user.email}</span>
-    </div>
-    <div class="profile-field">
-      <span class="profile-field-label">Contact Number</span>
-      <span class="profile-field-value">${profile?.contact_number || '—'}</span>
-    </div>
-    <div class="profile-field">
-      <span class="profile-field-label">Sitio / Purok</span>
-      <span class="profile-field-value">${profile?.sitio || '—'}</span>
-    </div>
-    <div class="profile-field">
-      <span class="profile-field-label">Role</span>
-      <span class="profile-field-value" style="text-transform:capitalize;">${role}</span>
-    </div>
-  `
-
-  // Load document requests
-  const { data: requests } = await supabase
-    .from('document_requests')
-    .select('*')
-    .eq('user_id', session.user.id)
-    .order('created_at', { ascending: false })
-
-  const reqs = requests || []
-
-  // Update stats
-  document.getElementById('ov-total').textContent    = reqs.length
-  document.getElementById('ov-pending').textContent  = reqs.filter(r => r.status === 'pending').length
-  document.getElementById('ov-approved').textContent = reqs.filter(r => r.status === 'approved').length
-  document.getElementById('ov-rejected').textContent = reqs.filter(r => r.status === 'rejected').length
-
-  // Recent requests (overview — show last 3)
-  const recentEl = document.getElementById('recent-list')
-  recentEl.innerHTML = reqs.length === 0
-    ? buildEmptyState()
-    : reqs.slice(0, 3).map(buildRequestCard).join('')
-
-  // All requests (documents section)
-  const docListEl = document.getElementById('doc-list')
-  docListEl.innerHTML = reqs.length === 0
-    ? buildEmptyState()
-    : reqs.map(buildRequestCard).join('')
+  tbody.innerHTML = requests.map(r => {
+    const u = usersMap[r.user_id]
+    const name = u ? `${u.first_name} ${u.last_name}` : '—'
+    return `
+    <tr>
+      <td><strong>${name}</strong></td>
+      <td>${r.type ?? '—'}</td>
+      <td>${r.purpose ?? '—'}</td>
+      <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+      <td>${new Date(r.created_at).toLocaleDateString('en-PH')}</td>
+      <td><a href="managedocuments.html" class="btn-table-view">View</a></td>
+    </tr>`
+  }).join('')
 }
 
-document.addEventListener('DOMContentLoaded', initDashboard)
+// ── LOAD RECENT NEWS ──
+async function loadRecentNews() {
+  const { data, error } = await supabase
+    .from('news')
+    .select('id, title, category, is_featured, created_at')
+    .order('created_at', { ascending: false })
+    .limit(5)
+
+  if (error) console.error('News load error:', error.message)
+
+  const tbody = document.getElementById('recent-news')
+
+  if (error || !data?.length) {
+    tbody.innerHTML = `<tr><td colspan="4" class="table-empty">No news published yet.</td></tr>`
+    return
+  }
+
+  tbody.innerHTML = data.map(n => `
+    <tr>
+      <td><strong>${n.title}</strong></td>
+      <td><span class="status-badge status-active">${n.category}</span></td>
+      <td>${n.is_featured ? '⭐ Yes' : '—'}</td>
+      <td>${new Date(n.created_at).toLocaleDateString('en-PH')}</td>
+    </tr>
+  `).join('')
+}
+
+// ── LOGOUT ──
+window.logout = async () => {
+  await supabase.auth.signOut()
+  localStorage.clear()
+  window.location.href = '/index.html'
+}
+
+// ── SIDEBAR TOGGLE ──
+window.toggleSidebar = () => {
+  document.getElementById('sidebar').classList.toggle('open')
+}
+
+// ── INIT ──
+loadStats()
+loadRecentRequests()
+loadRecentNews()
