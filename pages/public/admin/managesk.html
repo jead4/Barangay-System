@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SK Programs &amp; Events — Admin</title>
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/images/logo.png" alt="Logo" class="sidebar-logo">
+      <div><div class="sidebar-title">Day-as Connect</div><div class="sidebar-sub">Admin Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="admindashboard.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
+      <div class="sidebar-section-label">Content</div>
+      <a href="managenews.html" class="sidebar-link"><span class="sidebar-icon">📰</span> News</a>
+      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
+      <a href="manageprojects.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span> Projects</a>
+      <a href="managesk.html" class="sidebar-link active"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
+      <div class="sidebar-section-label">Services</div>
+      <a href="managedocuments.html" class="sidebar-link"><span class="sidebar-icon">📄</span> Document Requests</a>
+      <a href="managereports.html" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Blotter Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar">A</div>
+        <div><div class="sidebar-user-name" id="admin-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+      <button class="sidebar-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="topbar-title">SK Programs &amp; Events</h1>
+          <p class="topbar-sub">Manage Sangguniang Kabataan programs and upcoming events</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TAB SWITCHER -->
+    <div class="admin-filter-bar" style="padding-bottom:0; border-bottom:2px solid #e2e8f0; margin-bottom:0;">
+      <button class="sk-tab active" onclick="switchTab('programs', this)">🌱 Programs</button>
+      <button class="sk-tab" onclick="switchTab('events', this)">📅 Events</button>
+    </div>
+
+    <!-- PROGRAMS SECTION -->
+    <div id="tab-programs">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem 1rem;">
+        <div class="admin-section-title" style="padding:0;margin:0;">Youth Programs</div>
+        <button class="btn-admin-primary" onclick="openProgramModal()">+ Add Program</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Program Title</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date Added</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="programs-tbody">
+            <tr><td colspan="5" class="table-empty">Loading programs...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EVENTS SECTION -->
+    <div id="tab-events" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem 1rem;">
+        <div class="admin-section-title" style="padding:0;margin:0;">Upcoming Events</div>
+        <button class="btn-admin-primary" onclick="openEventModal()">+ Add Event</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Event Title</th>
+              <th>Location</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Tag</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="events-tbody">
+            <tr><td colspan="6" class="table-empty">Loading events...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── ADD/EDIT PROGRAM MODAL ── -->
+  <div class="admin-modal-overlay" id="program-modal">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h3 id="program-modal-title">Add Program</h3>
+        <button class="admin-modal-close" onclick="closeProgramModal()">✕</button>
+      </div>
+      <form id="program-form" class="admin-modal-form">
+        <input type="hidden" id="program-id">
+        <div class="admin-form-group">
+          <label>Program Title *</label>
+          <input type="text" id="program-title" placeholder="e.g. Grasya sa Sangguniang Kabataan" required>
+        </div>
+        <div class="admin-form-group">
+          <label>Description *</label>
+          <textarea id="program-description" rows="4" placeholder="Describe the program..." required></textarea>
+        </div>
+        <div class="admin-form-group">
+          <label>Status *</label>
+          <select id="program-status" required>
+            <option value="active" selected>● Active</option>
+            <option value="ongoing">🔄 Ongoing</option>
+            <option value="upcoming">📅 Upcoming</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label>Image URL (optional)</label>
+          <input type="url" id="program-image" placeholder="https://...">
+        </div>
+        <div class="admin-modal-error" id="program-error"></div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-admin-ghost" onclick="closeProgramModal()">Cancel</button>
+          <button type="submit" class="btn-admin-primary">Save Program</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── ADD/EDIT EVENT MODAL ── -->
+  <div class="admin-modal-overlay" id="event-modal">
+    <div class="admin-modal admin-modal-wide">
+      <div class="admin-modal-header">
+        <h3 id="event-modal-title">Add Event</h3>
+        <button class="admin-modal-close" onclick="closeEventModal()">✕</button>
+      </div>
+      <form id="event-form" class="admin-modal-form">
+        <input type="hidden" id="event-id">
+        <div class="admin-form-group">
+          <label>Event Title *</label>
+          <input type="text" id="event-title" placeholder="e.g. KK Assembly & Day-as Arat na Awarding" required>
+        </div>
+        <div class="admin-form-group">
+          <label>Description</label>
+          <textarea id="event-description" rows="3" placeholder="Brief description of the event..."></textarea>
+        </div>
+        <div class="admin-form-group">
+          <label>Location *</label>
+          <input type="text" id="event-location" placeholder="e.g. Day-as Gym" required>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Event Date *</label>
+            <input type="date" id="event-date" required>
+          </div>
+          <div class="admin-form-group">
+            <label>Tag</label>
+            <select id="event-tag">
+              <option value="Governance">Governance</option>
+              <option value="Health">Health</option>
+              <option value="Sports">Sports</option>
+              <option value="Education">Education</option>
+              <option value="Environment">Environment</option>
+              <option value="Cultural">Cultural</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Start Time *</label>
+            <input type="time" id="event-start-time" required>
+          </div>
+          <div class="admin-form-group">
+            <label>End Time</label>
+            <input type="time" id="event-end-time">
+          </div>
+        </div>
+        <div class="admin-modal-error" id="event-error"></div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-admin-ghost" onclick="closeEventModal()">Cancel</button>
+          <button type="submit" class="btn-admin-primary">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    .sk-tab {
+      padding: 0.85rem 1.5rem; background: none; border: none;
+      font-size: 0.9rem; font-weight: 600; color: var(--gray);
+      cursor: pointer; border-bottom: 3px solid transparent;
+      transition: all 0.2s; font-family: 'Inter', sans-serif;
+      margin-bottom: -2px;
+    }
+    .sk-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .sk-tab:hover  { color: var(--navy); }
+  </style>
+
+  <script type="module" src="/js/managesk.js"></script>
+</body>
+</html>

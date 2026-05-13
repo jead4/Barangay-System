@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Manage Projects — Admin</title>
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/images/logo.png" alt="Logo" class="sidebar-logo">
+      <div><div class="sidebar-title">Day-as Connect</div><div class="sidebar-sub">Admin Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="admindashboard.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
+      <div class="sidebar-section-label">Content</div>
+      <a href="managenews.html" class="sidebar-link"><span class="sidebar-icon">📰</span> News</a>
+      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
+      <a href="manageprojects.html" class="sidebar-link active"><span class="sidebar-icon">🏗️</span> Projects</a>
+      <a href="managesk.html" class="sidebar-link"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
+      <div class="sidebar-section-label">Services</div>
+      <a href="managedocuments.html" class="sidebar-link"><span class="sidebar-icon">📄</span> Document Requests</a>
+      <a href="managereports.html" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Blotter Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar">A</div>
+        <div><div class="sidebar-user-name" id="admin-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+      <button class="sidebar-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="topbar-title">Manage Projects</h1>
+          <p class="topbar-sub">Add and update barangay infrastructure projects</p>
+        </div>
+      </div>
+      <button class="btn-admin-primary" onclick="openProjectModal()">+ Add Project</button>
+    </header>
+
+    <div class="admin-filter-bar">
+      <button class="filter-chip active" onclick="filterProjects('all', this)">All</button>
+      <button class="filter-chip" onclick="filterProjects('ongoing', this)">🔄 Ongoing</button>
+      <button class="filter-chip" onclick="filterProjects('upcoming', this)">📅 Upcoming</button>
+      <button class="filter-chip" onclick="filterProjects('completed', this)">✅ Completed</button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Project Title</th>
+            <th>Location</th>
+            <th>Progress</th>
+            <th>Status</th>
+            <th>Budget</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="projects-tbody">
+          <tr><td colspan="6" class="table-empty">Loading projects...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ADD/EDIT PROJECT MODAL -->
+  <div class="admin-modal-overlay" id="project-modal">
+    <div class="admin-modal admin-modal-wide">
+      <div class="admin-modal-header">
+        <h3 id="project-modal-title">Add Project</h3>
+        <button class="admin-modal-close" onclick="closeProjectModal()">✕</button>
+      </div>
+      <form id="project-form" class="admin-modal-form">
+        <input type="hidden" id="project-id">
+        <div class="admin-form-group">
+          <label>Project Title *</label>
+          <input type="text" id="project-title" placeholder="e.g. Road Concreting — Sitio Symva" required>
+        </div>
+        <div class="admin-form-group">
+          <label>Description *</label>
+          <textarea id="project-description" rows="4" placeholder="Describe the project details..." required></textarea>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Location</label>
+            <input type="text" id="project-location" placeholder="e.g. Sitio Symva">
+          </div>
+          <div class="admin-form-group">
+            <label>Status *</label>
+            <select id="project-status" required>
+              <option value="upcoming">📅 Upcoming</option>
+              <option value="ongoing" selected>🔄 Ongoing</option>
+              <option value="completed">✅ Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Budget (₱)</label>
+            <input type="number" id="project-budget" placeholder="0.00" min="0">
+          </div>
+          <div class="admin-form-group">
+            <label>Progress (0–100%) *</label>
+            <input type="number" id="project-progress" min="0" max="100" value="0" required>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Start Date</label>
+            <input type="date" id="project-start">
+          </div>
+          <div class="admin-form-group">
+            <label>End Date</label>
+            <input type="date" id="project-end">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label>Image URL (optional)</label>
+          <input type="url" id="project-image" placeholder="https://...">
+        </div>
+        <div class="admin-modal-error" id="project-error"></div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-admin-ghost" onclick="closeProjectModal()">Cancel</button>
+          <button type="submit" class="btn-admin-primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/manageprojects.js"></script>
+</body>
+</html>

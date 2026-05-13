@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Manage News — Admin</title>
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/images/logo.png" alt="Logo" class="sidebar-logo">
+      <div><div class="sidebar-title">Day-as Connect</div><div class="sidebar-sub">Admin Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="admindashboard.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
+      <div class="sidebar-section-label">Content</div>
+      <a href="managenews.html" class="sidebar-link active"><span class="sidebar-icon">📰</span> News</a>
+      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
+      <a href="manageprojects.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span> Projects</a>
+      <a href="managesk.html" class="sidebar-link"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
+      <div class="sidebar-section-label">Services</div>
+      <a href="managedocuments.html" class="sidebar-link"><span class="sidebar-icon">📄</span> Document Requests</a>
+      <a href="managereports.html" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Blotter Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar">A</div>
+        <div><div class="sidebar-user-name" id="admin-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+      <button class="sidebar-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="topbar-title">Manage News</h1>
+          <p class="topbar-sub">Add, edit, and publish news articles</p>
+        </div>
+      </div>
+      <button class="btn-admin-primary" onclick="openNewsModal()">+ Add News</button>
+    </header>
+
+    <div class="admin-filter-bar">
+      <button class="filter-chip active" onclick="filterNews('all', this)">All</button>
+      <button class="filter-chip" onclick="filterNews('announcements', this)">Announcements</button>
+      <button class="filter-chip" onclick="filterNews('health', this)">Health</button>
+      <button class="filter-chip" onclick="filterNews('projects', this)">Projects</button>
+      <button class="filter-chip" onclick="filterNews('events', this)">Events</button>
+      <button class="filter-chip" onclick="filterNews('alerts', this)">Alerts</button>
+      <button class="filter-chip" onclick="filterNews('youth', this)">Youth</button>
+      <button class="filter-chip" onclick="filterNews('environment', this)">Environment</button>
+      <button class="filter-chip" onclick="filterNews('cultural', this)">Cultural</button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Featured</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="news-tbody">
+          <tr><td colspan="5" class="table-empty">Loading news...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ── ADD/EDIT NEWS MODAL ── -->
+  <div class="admin-modal-overlay" id="news-modal">
+    <div class="admin-modal admin-modal-wide">
+      <div class="admin-modal-header">
+        <h3 id="news-modal-title">Add News</h3>
+        <button class="admin-modal-close" onclick="closeNewsModal()">✕</button>
+      </div>
+      <form id="news-form" class="admin-modal-form">
+        <input type="hidden" id="news-id">
+        <div class="admin-form-group">
+          <label>Title *</label>
+          <input type="text" id="news-title" placeholder="Enter news headline" required>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-form-group">
+            <label>Category *</label>
+            <select id="news-category" required>
+              <option value="" disabled selected>Select category</option>
+              <option value="announcements">Announcements</option>
+              <option value="health">Health</option>
+              <option value="projects">Projects</option>
+              <option value="events">Events</option>
+              <option value="alerts">Alerts</option>
+              <option value="youth">Youth</option>
+              <option value="environment">Environment</option>
+              <option value="cultural">Cultural</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label>Image URL (optional)</label>
+            <input type="url" id="news-image" placeholder="https://...">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label>Content *</label>
+          <textarea id="news-content" rows="6" placeholder="Write the full news content here..." required></textarea>
+        </div>
+        <div class="admin-form-row">
+          <label class="admin-checkbox-label">
+            <input type="checkbox" id="news-featured"> ⭐ Mark as Featured Story
+          </label>
+          <label class="admin-checkbox-label">
+            <input type="checkbox" id="news-alert"> 🔴 Mark as Alert / Advisory
+          </label>
+        </div>
+        <div class="admin-modal-error" id="news-error"></div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-admin-ghost" onclick="closeNewsModal()">Cancel</button>
+          <button type="submit" class="btn-admin-primary">Save News</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/managenews.js"></script>
+</body>
+</html>

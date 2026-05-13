@@ -22,7 +22,7 @@
       <div class="sk-hero-left">
         <span class="sk-hero-label">👥 Sangguniang Kabataan</span>
         <h1>Sangguniang<br><span>Kabataan</span></h1>
-        <p>Empowering the youth of Barangay Day-os to lead, serve, and shape a brighter future. The SK is the voice of the young in every community decision.</p>
+        <p>Empowering the youth of Barangay Day-as to lead, serve, and shape a brighter future. The SK is the voice of the young in every community decision.</p>
       </div>
       <div class="sk-hero-stats">
         <div class="sk-stat">
@@ -77,70 +77,6 @@
     <div class="sk-loading">Loading programs...</div>
   </div>
 
-  <!-- ══ UPCOMING EVENTS ══ -->
-  <section class="sk-events-section">
-    <div class="sk-events-inner">
-      <span class="sk-section-label">Calendar</span>
-      <h2 class="sk-section-title">Upcoming SK Events</h2>
-
-      <div class="sk-events-list">
-
-        <div class="sk-event-item">
-          <div class="sk-event-date">
-            <span class="ev-month">Apr</span>
-            <span class="ev-day">22</span>
-          </div>
-          <div class="sk-event-divider"></div>
-          <div class="sk-event-info">
-            <h4>KK Assembly &amp; Day-as Arat na Awarding</h4>
-            <p>📍 Day-as Gym &nbsp;·&nbsp; 4:00pm – 7:00pm &nbsp;·&nbsp; ALL PLAYERS AND THOSE WHO REGISTERED ARE REQUIRED TO ATTEND</p>
-          </div>
-          <span class="sk-event-tag">Governance</span>
-        </div>
-
-        <div class="sk-event-item">
-          <div class="sk-event-date">
-            <span class="ev-month">Apr</span>
-            <span class="ev-day">22</span>
-          </div>
-          <div class="sk-event-divider"></div>
-          <div class="sk-event-info">
-            <h4>KK Assembly &amp; Day-as Arat na Awarding</h4>
-            <p>📍 Day-as Gym &nbsp;·&nbsp; 4:00pm – 7:00pm &nbsp;·&nbsp; ALL PLAYERS AND THOSE WHO REGISTERED ARE REQUIRED TO ATTEND</p>
-          </div>
-          <span class="sk-event-tag">Governance</span>
-        </div>
-
-        <div class="sk-event-item">
-          <div class="sk-event-date">
-            <span class="ev-month">Apr</span>
-            <span class="ev-day">22</span>
-          </div>
-          <div class="sk-event-divider"></div>
-          <div class="sk-event-info">
-            <h4>KK Assembly &amp; Day-as Arat na Awarding</h4>
-            <p>📍 Day-as Gym &nbsp;·&nbsp; 4:00pm – 7:00pm &nbsp;·&nbsp; ALL PLAYERS AND THOSE WHO REGISTERED ARE REQUIRED TO ATTEND</p>
-          </div>
-          <span class="sk-event-tag">Governance</span>
-        </div>
-
-        <div class="sk-event-item">
-          <div class="sk-event-date">
-            <span class="ev-month">Apr</span>
-            <span class="ev-day">22</span>
-          </div>
-          <div class="sk-event-divider"></div>
-          <div class="sk-event-info">
-            <h4>KK Assembly &amp; Day-as Arat na Awarding</h4>
-            <p>📍 Day-as Gym &nbsp;·&nbsp; 4:00pm – 7:00pm &nbsp;·&nbsp; ALL PLAYERS AND THOSE WHO REGISTERED ARE REQUIRED TO ATTEND</p>
-          </div>
-          <span class="sk-event-tag">Governance</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- Footer -->
   <footer>
     <div class="footer-logo">Day-as Connect</div>
@@ -164,6 +100,8 @@
       .then(res => res.text())
       .then(html => {
         document.getElementById('programs-section').innerHTML = html;
+
+        import('/js/sk.js')
       })
       .catch(() => {
         document.getElementById('programs-section').innerHTML = '';
@@ -171,6 +109,7 @@
   </script>
   <script src="/js/navbar.js"></script>
   <script type="module" src="/js/navauth.js"></script>
+  
 
 </body>
 </html>
