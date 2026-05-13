@@ -12,8 +12,8 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <div id="navbar-container"></div>
+
   <!-- ══ HERO ══ -->
   <section class="news-hero">
     <div class="news-hero-inner">
@@ -40,131 +40,385 @@
   <main class="news-main">
     <div class="news-main-inner">
 
-      <!-- ALERT BANNER -->
-      <div class="news-alert">
-        <div class="news-alert-left">
-          <span class="news-alert-title">PUBLIC ADVISORY: Typhoon Signal #1 in Cebu</span>
-          <span class="news-alert-desc">Residents are advised to stay indoors. Barangay emergency response team is on standby.</span>
-        </div>
-        <span class="news-alert-time">Posted 1 hour ago</span>
-      </div>
+      <!-- ALERT BANNER (dynamic) -->
+      <div id="alert-banner"></div>
 
       <!-- FEATURED STORIES -->
-      <div class="news-section-heading">
+      <div id="featured-heading" class="news-section-heading" style="display:none;">
         <h2>Featured Stories</h2>
       </div>
-
-      <div class="news-featured">
-
-        <!-- Big featured card -->
-        <div class="news-card-featured">
-          <div class="featured-img">
-            <div class="featured-img-placeholder bg-blue-grad"></div>
-          </div>
-          <div class="featured-body">
-            <span class="news-tag tag-infrastructure">Infrastructure</span>
-            <h3>Road Concreting Project Along Sitio Symwa Now 75% Complete</h3>
-            <p>The long-awaited road concreting project along the main road of Sitio Symva has reached 80% completion this week. Residents can expect the full project to be completed by end of March 2024, significantly improving mobility and flood drainage in the area.</p>
-            <span class="news-date">February 26, 2026</span>
-          </div>
-        </div>
-
-        <!-- Side cards -->
-        <div class="news-side-stack">
-
-          <div class="news-card-side">
-            <div class="side-img bg-green-grad"></div>
-            <div class="side-body">
-              <span class="news-tag tag-health">Health</span>
-              <h4>Free Vaccination Drive This Saturday at Barangay Hall</h4>
-              <p>Anti-flu and pneumonia vaccines available for senior citizens and children under 5.</p>
-              <span class="news-date">February 26, 2026</span>
-            </div>
-          </div>
-
-          <div class="news-card-side">
-            <div class="side-img bg-amber-grad"></div>
-            <div class="side-body">
-              <span class="news-tag tag-announcement">Announcement</span>
-              <h4>Barangay Clearance Now Available Online — No More Long Queues</h4>
-              <p>Residents can now request and track their barangay clearance through the portal.</p>
-              <span class="news-date">March 26, 2026</span>
-            </div>
-          </div>
-
-          <div class="news-card-side">
-            <div class="side-img bg-purple-grad"></div>
-            <div class="side-body">
-              <span class="news-tag tag-announcement">Announcement</span>
-              <h4>Barangay Fiesta 2024 — Schedule of Activities Announced</h4>
-              <p>Three days of cultural shows, sports, and community bonding starting April 5.</p>
-              <span class="news-date">March 26, 2026</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
+      <div id="featured-section"></div>
 
       <!-- LATEST NEWS -->
       <div class="news-section-heading">
         <h2>Latest News</h2>
       </div>
+      <div class="news-grid" id="news-grid">
+        <!-- skeleton loading -->
+        <div class="news-card-grid news-skeleton-card"></div>
+        <div class="news-card-grid news-skeleton-card"></div>
+        <div class="news-card-grid news-skeleton-card"></div>
+      </div>
 
-      <div class="news-grid">
+      <!-- EMPTY STATE -->
+      <div id="news-empty" style="display:none; text-align:center; padding:5rem 2rem;">
+        <div style="font-size:3rem; margin-bottom:1rem;">📰</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; color:#0f1f2e; margin-bottom:0.5rem;">No news yet</h3>
+        <p style="color:#5a6a7a;">Check back soon for the latest updates from Barangay Day-as.</p>
+      </div>
 
-        <div class="news-card-grid">
-          <div class="grid-img bg-green-grad"></div>
-          <div class="grid-body">
-            <span class="news-tag tag-youth">Youth</span>
-            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
-            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
-            <span class="news-date">February 26, 2026</span>
-          </div>
+      <!-- ══ PROJECTS SECTION ══ -->
+      <div class="news-section-heading" style="margin-top: 3rem;">
+        <h2>Barangay Projects</h2>
+        <div class="proj-filter-chips">
+          <button class="proj-chip active" data-status="all">All</button>
+          <button class="proj-chip" data-status="ongoing">🔄 Ongoing</button>
+          <button class="proj-chip" data-status="upcoming">📅 Upcoming</button>
+          <button class="proj-chip" data-status="completed">✅ Completed</button>
         </div>
+      </div>
 
-        <div class="news-card-grid">
-          <div class="grid-img bg-teal-grad"></div>
-          <div class="grid-body">
-            <span class="news-tag tag-environment">Environment</span>
-            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
-            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
-            <span class="news-date">February 26, 2026</span>
-          </div>
-        </div>
+      <div class="projects-grid" id="projects-grid">
+        <div class="proj-card proj-skeleton-card"></div>
+        <div class="proj-card proj-skeleton-card"></div>
+        <div class="proj-card proj-skeleton-card"></div>
+      </div>
 
-        <div class="news-card-grid">
-          <div class="grid-img bg-amber-grad"></div>
-          <div class="grid-body">
-            <span class="news-tag tag-cultural">Cultural</span>
-            <h4>SK Launches Free Computer Literacy Program for Out-of-School Youth</h4>
-            <p>The Sangguniang Kabataan is opening 30 slots for a free basic computer skills training this April.</p>
-            <span class="news-date">February 26, 2026</span>
-          </div>
-        </div>
-
+      <div id="projects-empty" style="display:none; text-align:center; padding:4rem 2rem;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🏗️</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.75rem; color:#0f1f2e; margin-bottom:0.5rem;">No projects yet</h3>
+        <p style="color:#5a6a7a;">Check back soon for barangay project updates.</p>
       </div>
 
     </div>
   </main>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-logo">Day-as Connect</div>
     <p>© 2024 Barangay Day-as — All rights reserved</p>
     <p>Transparent · Accountable · Accessible</p>
   </footer>
 
-  <script>
+  <script src="/js/navbar.js"></script>
+  <script type="module" src="/js/navauth.js"></script>
+  <script type="module">
+    import { supabase } from '/js/supabase.js'
+
+    // ── HELPERS ──
+    const tagClass = {
+      announcements: 'tag-announcement', health: 'tag-health',
+      projects: 'tag-infrastructure',    events: 'tag-announcement',
+      alerts: 'tag-announcement',        youth: 'tag-youth',
+      environment: 'tag-environment',    cultural: 'tag-cultural'
+    }
+    const grads = ['bg-blue-grad','bg-green-grad','bg-amber-grad','bg-purple-grad','bg-teal-grad']
+    let gi = 0
+    const grad = () => grads[gi++ % grads.length]
+
+    const fmtDate = iso => new Date(iso).toLocaleDateString('en-PH', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    })
+    const timeAgo = iso => {
+      const m = Math.floor((Date.now() - new Date(iso)) / 60000)
+      if (m < 60) return `${m} min${m !== 1 ? 's' : ''} ago`
+      const h = Math.floor(m / 60)
+      if (h < 24) return `${h} hr${h !== 1 ? 's' : ''} ago`
+      return `${Math.floor(h/24)} day${Math.floor(h/24) !== 1 ? 's' : ''} ago`
+    }
+    const imgDiv = (url, cls) => url
+      ? `<div class="${cls}" style="background:url('${url}') center/cover no-repeat;"></div>`
+      : `<div class="${cls} ${grad()}"></div>`
+
+    // ══════════════════════════════════════
+    // NEWS
+    // ══════════════════════════════════════
+    let allNews = []
+    let currentNewsFilter = 'all'
+
+    async function loadNews() {
+      const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) { console.error('News:', error.message); return }
+      allNews = data || []
+      renderNews()
+    }
+
+    function renderNews() {
+      gi = 0
+      const list = currentNewsFilter === 'all'
+        ? allNews
+        : allNews.filter(n => n.category === currentNewsFilter)
+
+      // Alert banner
+      const alertEl = document.getElementById('alert-banner')
+      const alert   = list.find(n => n.is_alert)
+      alertEl.innerHTML = alert ? `
+        <div class="news-alert">
+          <div class="news-alert-left">
+            <span class="news-alert-title">🔴 ${alert.title}</span>
+            <span class="news-alert-desc">${alert.content.substring(0,130)}...</span>
+          </div>
+          <span class="news-alert-time">Posted ${timeAgo(alert.created_at)}</span>
+        </div>` : ''
+
+      // Featured
+      const featured   = list.filter(n => n.is_featured)
+      const featuredEl = document.getElementById('featured-section')
+      const headingEl  = document.getElementById('featured-heading')
+
+      if (featured.length) {
+        headingEl.style.display = 'block'
+        const main  = featured[0]
+        const sides = featured.slice(1, 4)
+        featuredEl.innerHTML = `
+          <div class="news-featured">
+            <div class="news-card-featured">
+              <div class="featured-img">${imgDiv(main.image_url, 'featured-img-placeholder')}</div>
+              <div class="featured-body">
+                <span class="news-tag ${tagClass[main.category] || 'tag-announcement'}">${main.category}</span>
+                <h3>${main.title}</h3>
+                <p>${main.content.substring(0,220)}...</p>
+                <span class="news-date">${fmtDate(main.created_at)}</span>
+              </div>
+            </div>
+            ${sides.length ? `
+            <div class="news-side-stack">
+              ${sides.map(s => `
+                <div class="news-card-side">
+                  ${imgDiv(s.image_url, 'side-img')}
+                  <div class="side-body">
+                    <span class="news-tag ${tagClass[s.category] || 'tag-announcement'}">${s.category}</span>
+                    <h4>${s.title}</h4>
+                    <p>${s.content.substring(0,100)}...</p>
+                    <span class="news-date">${fmtDate(s.created_at)}</span>
+                  </div>
+                </div>`).join('')}
+            </div>` : ''}
+          </div>`
+      } else {
+        headingEl.style.display = 'none'
+        featuredEl.innerHTML = ''
+      }
+
+      // Latest news grid
+      const gridEl  = document.getElementById('news-grid')
+      const emptyEl = document.getElementById('news-empty')
+      const latest  = list.filter(n => !n.is_featured && !n.is_alert)
+
+      if (!list.length) {
+        gridEl.innerHTML = ''
+        emptyEl.style.display = 'block'
+        return
+      }
+      emptyEl.style.display = 'none'
+      const items = latest.length ? latest : list
+      gridEl.innerHTML = items.map(n => `
+        <div class="news-card-grid">
+          ${imgDiv(n.image_url, 'grid-img')}
+          <div class="grid-body">
+            <span class="news-tag ${tagClass[n.category] || 'tag-announcement'}">${n.category}</span>
+            <h4>${n.title}</h4>
+            <p>${n.content.substring(0,130)}...</p>
+            <span class="news-date">${fmtDate(n.created_at)}</span>
+          </div>
+        </div>`).join('')
+    }
+
     // Filter tabs
     document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-      });
-    });
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'))
+        tab.classList.add('active')
+        currentNewsFilter = tab.dataset.filter
+        gi = 0
+        renderNews()
+      })
+    })
+
+    // ══════════════════════════════════════
+    // PROJECTS
+    // ══════════════════════════════════════
+    let allProjects = []
+    let currentProjFilter = 'all'
+
+    async function loadProjects() {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) { console.error('Projects:', error.message); return }
+      allProjects = data || []
+      renderProjects()
+    }
+
+    function renderProjects() {
+      const list    = currentProjFilter === 'all' ? allProjects : allProjects.filter(p => p.status === currentProjFilter)
+      const gridEl  = document.getElementById('projects-grid')
+      const emptyEl = document.getElementById('projects-empty')
+
+      if (!list.length) {
+        gridEl.innerHTML = ''
+        emptyEl.style.display = 'block'
+        return
+      }
+      emptyEl.style.display = 'none'
+
+      const statusLabel = { ongoing:'🔄 Ongoing', upcoming:'📅 Upcoming', completed:'✅ Completed' }
+      const fmtMoney = n => n ? '₱' + Number(n).toLocaleString('en-PH') : null
+
+      gridEl.innerHTML = list.map(p => `
+        <div class="proj-card">
+          <div class="proj-card-img ${p.image_url ? '' : grad()}"
+            ${p.image_url ? `style="background:url('${p.image_url}') center/cover no-repeat;"` : ''}>
+            <span class="proj-status-badge proj-status-${p.status}">${statusLabel[p.status] || p.status}</span>
+          </div>
+          <div class="proj-card-body">
+            <h3>${p.title}</h3>
+            ${p.location ? `<p class="proj-location">📍 ${p.location}</p>` : ''}
+            <p class="proj-desc">${p.description.substring(0,140)}${p.description.length > 140 ? '...' : ''}</p>
+            <div class="proj-progress-wrap">
+              <div class="proj-progress-header">
+                <span>Progress</span><strong>${p.progress}%</strong>
+              </div>
+              <div class="proj-progress-bar">
+                <div class="proj-progress-fill" style="width:${p.progress}%"></div>
+              </div>
+            </div>
+            <div class="proj-meta">
+              ${fmtMoney(p.budget) ? `<div class="proj-meta-item"><span>💰 Budget</span><strong>${fmtMoney(p.budget)}</strong></div>` : ''}
+              ${p.start_date ? `<div class="proj-meta-item"><span>📅 Started</span><strong>${fmtDate(p.start_date)}</strong></div>` : ''}
+              ${p.end_date   ? `<div class="proj-meta-item"><span>🏁 Target</span><strong>${fmtDate(p.end_date)}</strong></div>`  : ''}
+            </div>
+          </div>
+        </div>`).join('')
+    }
+
+    // Project filter chips
+    document.querySelectorAll('.proj-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.proj-chip').forEach(c => c.classList.remove('active'))
+        chip.classList.add('active')
+        currentProjFilter = chip.dataset.status
+        renderProjects()
+      })
+    })
+
+    // ── INIT ──
+    loadNews()
+    loadProjects()
   </script>
-  <script src="/js/navbar.js"></script>
-  <script type="module" src="/js/navauth.js"></script>
+
+  <style>
+    /* Featured image fill */
+    .featured-img-placeholder { width:100%; height:100%; min-height:220px; }
+
+    /* Skeleton loading */
+    .news-skeleton-card, .proj-skeleton-card {
+      background: linear-gradient(90deg,#e2e8f0 25%,#f0f4f8 50%,#e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 16px;
+    }
+    .news-skeleton-card { height: 280px; }
+    .proj-skeleton-card { height: 360px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* Projects grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Project card */
+    .proj-card {
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid rgba(15,31,46,0.07);
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+    .proj-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,31,46,0.1); }
+
+    .proj-card-img {
+      height: 160px; position: relative;
+    }
+    .proj-status-badge {
+      position: absolute; top: 10px; left: 10px;
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 0.68rem; font-weight: 700;
+    }
+    .proj-status-ongoing   { background: rgba(46,109,164,0.9);  color:#fff; }
+    .proj-status-upcoming  { background: rgba(124,58,237,0.9);  color:#fff; }
+    .proj-status-completed { background: rgba(34,197,94,0.9);   color:#fff; }
+
+    .proj-card-body { padding: 1.25rem; }
+    .proj-card-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 800; color: var(--navy);
+      margin-bottom: 0.3rem; line-height: 1.3;
+    }
+    .proj-location { font-size: 0.78rem; color: var(--sky); margin-bottom: 0.6rem; }
+    .proj-desc     { font-size: 0.82rem; color: var(--gray); line-height: 1.6; margin-bottom: 1rem; }
+
+    .proj-progress-wrap { margin-bottom: 1rem; }
+    .proj-progress-header {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: var(--gray); margin-bottom: 5px;
+    }
+    .proj-progress-header strong { color: var(--navy); }
+    .proj-progress-bar {
+      height: 6px; background: #e2e8f0; border-radius: 100px; overflow: hidden;
+    }
+    .proj-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 100px; transition: width 0.6s ease;
+    }
+    .proj-meta {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      padding-top: 0.75rem; border-top: 1px solid rgba(15,31,46,0.06);
+    }
+    .proj-meta-item { display: flex; justify-content: space-between; font-size: 0.78rem; }
+    .proj-meta-item span   { color: var(--gray); }
+    .proj-meta-item strong { color: var(--navy); font-weight: 600; }
+
+    /* Project filter chips */
+    .proj-filter-chips {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem;
+    }
+    .proj-chip {
+      padding: 5px 14px; border-radius: 100px;
+      font-size: 0.78rem; font-weight: 600;
+      background: var(--light); border: 1px solid rgba(15,31,46,0.1);
+      color: var(--gray); cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .proj-chip:hover  { border-color: var(--gold); color: var(--gold); }
+    .proj-chip.active {
+      background: rgba(42,157,107,0.1);
+      border-color: var(--gold); color: var(--gold); font-weight: 700;
+    }
+
+    /* Section heading with chips */
+    .news-section-heading {
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1024px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 
 </body>
 </html>

@@ -70,10 +70,11 @@ window.editProgram = async (id) => {
   document.getElementById('program-modal').classList.add('open')
 }
 
-window.deleteProgram = async (id) => {
-  if (!confirm('Delete this program?')) return
-  await supabase.from('sk_programs').delete().eq('id', id)
-  loadPrograms()
+window.deleteProgram = (id) => {
+  showDeleteConfirm('Are you sure you want to delete this SK program?', async () => {
+    await supabase.from('sk_programs').delete().eq('id', id)
+    loadPrograms()
+  })
 }
 
 document.getElementById('program-form').addEventListener('submit', async (e) => {
@@ -164,10 +165,11 @@ window.editEvent = async (id) => {
   document.getElementById('event-modal').classList.add('open')
 }
 
-window.deleteEvent = async (id) => {
-  if (!confirm('Delete this event?')) return
-  await supabase.from('sk_events').delete().eq('id', id)
-  loadEvents()
+window.deleteEvent = (id) => {
+  showDeleteConfirm('Are you sure you want to delete this SK event?', async () => {
+    await supabase.from('sk_events').delete().eq('id', id)
+    loadEvents()
+  })
 }
 
 document.getElementById('event-form').addEventListener('submit', async (e) => {
@@ -199,17 +201,16 @@ document.getElementById('event-form').addEventListener('submit', async (e) => {
   loadEvents()
 })
 
-const bindModalClose = (id) => {
-  const modal = document.getElementById(id)
-  if (!modal) return
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('open')
+// ── CLOSE ON OUTSIDE CLICK ──
+;['program-modal','event-modal','delete-confirm-modal'].forEach(id => {
+  const el = document.getElementById(id)
+  if (el) el.addEventListener('click', e => {
+    if (e.target.id === id) {
+      el.classList.remove('open')
+      if (id === 'delete-confirm-modal') { _deleteCallback = null }
+    }
   })
-}
-
-bindModalClose('program-modal')
-bindModalClose('event-modal')
+})
 
 window.logout = async () => { await supabase.auth.signOut(); localStorage.clear(); window.location.href = '/index.html' }
 window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open')
@@ -217,3 +218,23 @@ window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle
 // ── INIT ──
 loadPrograms()
 loadEvents()
+
+
+// ── CUSTOM DELETE CONFIRM MODAL ──
+let _deleteCallback = null
+
+window.showDeleteConfirm = (message, callback) => {
+  document.getElementById('confirm-delete-message').textContent = message
+  _deleteCallback = callback
+  document.getElementById('delete-confirm-modal').classList.add('open')
+}
+
+window.closeDeleteConfirm = () => {
+  document.getElementById('delete-confirm-modal').classList.remove('open')
+  _deleteCallback = null
+}
+
+window.confirmDeleteAction = async () => {
+  if (_deleteCallback) await _deleteCallback()
+  closeDeleteConfirm()
+}

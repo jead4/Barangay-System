@@ -28,8 +28,22 @@ window.closeModalOutside = function(event, id) {
 }
 
 window.switchModal = function(closeId, openId) {
-  window.closeModal(closeId)
-  setTimeout(() => window.openModal(openId), 250)
+  // Close current modal
+  const closeEl = document.getElementById(closeId)
+  if (closeEl) {
+    closeEl.classList.remove('open')
+    document.body.style.overflow = ''
+  }
+  // Open next modal after short delay
+  setTimeout(() => {
+    const openEl = document.getElementById(openId)
+    if (openEl) {
+      openEl.classList.add('open')
+      document.body.style.overflow = 'hidden'
+    } else {
+      console.error('Modal not found:', openId)
+    }
+  }, 280)
 }
 
 window.switchRole = function(el, role) {
@@ -139,6 +153,43 @@ async function updateNavbar() {
   }, 100)
 }
 
+
+// ── REGISTER PASSWORD STRENGTH ──
+window.checkRegStrength = (val) => {
+  const bar   = document.getElementById('reg-strength-bar')
+  const label = document.getElementById('reg-strength-label')
+  const reqs  = document.getElementById('reg-strength-reqs')
+  if (!bar) return
+
+  const hasLength  = val.length >= 8
+  const hasLetter  = /[A-Za-z]/.test(val)
+  const hasNumber  = /[0-9]/.test(val)
+  const hasSpecial = /[^A-Za-z0-9]/.test(val)
+
+  const score = [hasLength, hasLetter, hasNumber, hasSpecial].filter(Boolean).length
+
+  const colors = ['', '#dc2626', '#f97316', '#eab308', '#2a9d6b']
+  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong ✓']
+  const widths  = ['0%', '25%', '50%', '75%', '100%']
+
+  bar.style.width      = val.length ? widths[score] : '0%'
+  bar.style.background = colors[score] || ''
+  label.textContent    = val.length ? labels[score] : ''
+  label.style.color    = colors[score] || ''
+
+  // Show missing requirements
+  const missing = []
+  if (!hasLength)  missing.push('8+ chars')
+  if (!hasLetter)  missing.push('letter')
+  if (!hasNumber)  missing.push('number')
+  if (!hasSpecial) missing.push('symbol')
+
+  reqs.textContent = val.length && missing.length
+    ? 'Missing: ' + missing.join(', ')
+    : val.length && score === 4 ? '✓ All requirements met' : ''
+  reqs.style.color = score === 4 ? '#2a9d6b' : 'rgba(255,255,255,0.3)'
+}
+
 // ── ESCAPE KEY ──
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
@@ -246,8 +297,36 @@ document.addEventListener('DOMContentLoaded', () => {
         errorEl.textContent = 'Password must be at least 8 characters.'
         return
       }
+      if (!/[A-Za-z]/.test(password)) {
+        errorEl.textContent = 'Password must include at least one letter.'
+        return
+      }
+      if (!/[0-9]/.test(password)) {
+        errorEl.textContent = 'Password must include at least one number.'
+        return
+      }
+      if (!/[^A-Za-z0-9]/.test(password)) {
+        errorEl.textContent = 'Password must include at least one special character (e.g. @, #, !).'
+        return
+      }
 
       btn.disabled    = true
+      btn.textContent = 'Checking email...'
+
+      // ── PRE-CHECK: see if email already exists in user table ──
+      const { data: existing } = await supabase
+        .from('user')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle()
+
+      if (existing) {
+        errorEl.textContent = '❌ This email is already registered. Try logging in instead.'
+        btn.disabled    = false
+        btn.textContent = 'Create Account'
+        return
+      }
+
       btn.textContent = 'Creating account...'
 
       // Sign up with Supabase Auth
@@ -265,7 +344,19 @@ document.addEventListener('DOMContentLoaded', () => {
       })
 
       if (error) {
-        errorEl.textContent = error.message || 'Registration failed. Try again.'
+        // ── FRIENDLY ERROR MESSAGES ──
+        if (error.message.toLowerCase().includes('already registered') ||
+            error.message.toLowerCase().includes('already been registered') ||
+            error.message.toLowerCase().includes('user already exists') ||
+            error.message.toLowerCase().includes('email address is already')) {
+          errorEl.textContent = '❌ This email is already registered. Try logging in instead.'
+        } else if (error.message.toLowerCase().includes('invalid email')) {
+          errorEl.textContent = '❌ Please enter a valid email address.'
+        } else if (error.message.toLowerCase().includes('rate limit')) {
+          errorEl.textContent = '⏳ Too many attempts. Please wait a moment and try again.'
+        } else {
+          errorEl.textContent = error.message || 'Registration failed. Please try again.'
+        }
         btn.disabled    = false
         btn.textContent = 'Create Account'
         return
@@ -293,5 +384,47 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => window.switchModal('modal-register', 'modal-login'), 2000)
     })
   }
+
+
+// ── FORGOT PASSWORD FORM ──
+const forgotForm = document.getElementById('forgot-form')
+if (forgotForm) {
+  forgotForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const email   = document.getElementById('forgot-email').value.trim()
+    const errorEl = document.getElementById('forgot-error')
+    const btn     = forgotForm.querySelector('button[type="submit"]')
+
+    errorEl.textContent = ''
+    btn.disabled    = true
+    btn.textContent = 'Sending...'
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/pages/auth/resetpassword.html'
+    })
+
+    if (error) {
+      errorEl.textContent = error.message || 'Something went wrong. Please try again.'
+      btn.disabled    = false
+      btn.textContent = 'Send Reset Link →'
+      return
+    }
+
+    // Show success state
+    forgotForm.style.display = 'none'
+    document.getElementById('forgot-success').style.display = 'block'
+
+    // Auto close after 5 seconds
+    setTimeout(() => {
+      window.closeModal('modal-forgot')
+      forgotForm.style.display   = 'flex'
+      document.getElementById('forgot-success').style.display = 'none'
+      forgotForm.reset()
+      btn.disabled    = false
+      btn.textContent = 'Send Reset Link →'
+    }, 5000)
+  })
+}
 
 })

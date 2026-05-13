@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Document Requests — Admin</title>
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="/assets/images/logo.png" alt="Logo" class="sidebar-logo">
+      <div><div class="sidebar-title">Day-as Connect</div><div class="sidebar-sub">Admin Panel</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="admindashboard.html" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+      <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
+      <div class="sidebar-section-label">Content</div>
+      <a href="managenews.html" class="sidebar-link"><span class="sidebar-icon">📰</span> News</a>
+      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
+      <a href="manageprojects.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span> Projects</a>
+      <a href="managesk.html" class="sidebar-link"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
+      <div class="sidebar-section-label">Services</div>
+      <a href="managedocuments.html" class="sidebar-link active"><span class="sidebar-icon">📄</span> Document Requests</a>
+      <a href="managereports.html" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Blotter Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-avatar">A</div>
+        <div><div class="sidebar-user-name" id="admin-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+      </div>
+      <button class="sidebar-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="topbar-title">Document Requests</h1>
+          <p class="topbar-sub">Review, approve, and release resident document requests</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="doc-req-stats">
+      <div class="doc-stat-card amber">
+        <span class="doc-stat-num" id="count-pending">—</span>
+        <span class="doc-stat-label">🕐 Pending</span>
+      </div>
+      <div class="doc-stat-card blue">
+        <span class="doc-stat-num" id="count-approved">—</span>
+        <span class="doc-stat-label">✅ Approved</span>
+      </div>
+      <div class="doc-stat-card green">
+        <span class="doc-stat-num" id="count-released">—</span>
+        <span class="doc-stat-label">📦 Released</span>
+      </div>
+      <div class="doc-stat-card red">
+        <span class="doc-stat-num" id="count-rejected">—</span>
+        <span class="doc-stat-label">❌ Rejected</span>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="admin-filter-bar">
+      <button class="filter-chip active" onclick="filterDocs('all', this)">All</button>
+      <button class="filter-chip" onclick="filterDocs('pending', this)">🕐 Pending</button>
+      <button class="filter-chip" onclick="filterDocs('approved', this)">✅ Approved</button>
+      <button class="filter-chip" onclick="filterDocs('released', this)">📦 Released</button>
+      <button class="filter-chip" onclick="filterDocs('rejected', this)">❌ Rejected</button>
+    </div>
+
+    <!-- Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Resident</th>
+            <th>Document Type</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Date Requested</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="docs-tbody">
+          <tr><td colspan="6" class="table-empty">Loading requests...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- ── VIEW / ACTION MODAL ── -->
+  <div class="admin-modal-overlay" id="doc-modal">
+    <div class="admin-modal admin-modal-wide">
+      <div class="admin-modal-header">
+        <h3>Document Request Details</h3>
+        <button class="admin-modal-close" onclick="closeDocModal()">✕</button>
+      </div>
+
+      <!-- Details -->
+      <div class="doc-detail-grid">
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Resident Name</span>
+          <span class="doc-detail-value" id="doc-resident">—</span>
+        </div>
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Document Type</span>
+          <span class="doc-detail-value" id="doc-type">—</span>
+        </div>
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Purpose</span>
+          <span class="doc-detail-value" id="doc-purpose">—</span>
+        </div>
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Current Status</span>
+          <span class="doc-detail-value" id="doc-status">—</span>
+        </div>
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Date Requested</span>
+          <span class="doc-detail-value" id="doc-date">—</span>
+        </div>
+        <div class="doc-detail-item">
+          <span class="doc-detail-label">Contact</span>
+          <span class="doc-detail-value" id="doc-contact">—</span>
+        </div>
+      </div>
+
+      <!-- Edit fields -->
+      <div style="padding: 0 1.75rem 1.25rem;">
+
+        <div class="admin-form-group" style="margin-bottom:1rem;">
+          <label>Update Status</label>
+          <select id="doc-new-status">
+            <option value="pending">🕐 Pending</option>
+            <option value="approved">✅ Approved</option>
+            <option value="released">📦 Released</option>
+            <option value="rejected">❌ Rejected</option>
+          </select>
+        </div>
+
+        <div class="admin-form-group">
+          <label>Remarks / Notes (optional)</label>
+          <textarea id="doc-remarks" rows="3" placeholder="Add a message for the resident e.g. 'Please bring your valid ID when picking up.'"></textarea>
+        </div>
+      </div>
+
+      <input type="hidden" id="doc-id">
+      <div class="admin-modal-error" id="doc-error"></div>
+
+      <div class="admin-modal-footer doc-actions">
+        <button class="btn-admin-danger" onclick="deleteDocRequest()">🗑️ Delete</button>
+        <div style="display:flex;gap:0.75rem;">
+          <button class="btn-admin-ghost" onclick="closeDocModal()">Cancel</button>
+          <button class="btn-admin-primary" onclick="saveDocStatus()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .doc-req-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; padding: 1.75rem 2rem 0;
+    }
+    .doc-stat-card {
+      border-radius: 14px; padding: 1.25rem 1.5rem;
+      display: flex; flex-direction: column; gap: 4px;
+      border: 1px solid transparent;
+    }
+    .doc-stat-card.amber { background: rgba(234,179,8,0.08);  border-color: rgba(234,179,8,0.2); }
+    .doc-stat-card.blue  { background: rgba(46,109,164,0.08); border-color: rgba(46,109,164,0.2); }
+    .doc-stat-card.green { background: rgba(42,157,107,0.08); border-color: rgba(42,157,107,0.2); }
+    .doc-stat-card.red   { background: rgba(220,38,38,0.06);  border-color: rgba(220,38,38,0.15); }
+    .doc-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 900; color: #0f1f2e; line-height: 1;
+    }
+    .doc-stat-label { font-size: 0.78rem; color: #5a6a7a; font-weight: 500; }
+
+    .admin-form-group select,
+    .admin-form-group textarea {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid rgba(15,31,46,0.15);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem; color: #0f1f2e;
+      outline: none; transition: border-color 0.2s; background: #fff;
+    }
+    .admin-form-group select:focus,
+    .admin-form-group textarea:focus { border-color: #2a9d6b; }
+    .admin-form-group textarea { resize: vertical; }
+    .admin-form-group label {
+      display: block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: #5a6a7a; margin-bottom: 6px;
+    }
+  </style>
+
+
+  <!-- ── DELETE CONFIRM MODAL ── -->
+  <div class="admin-modal-overlay" id="delete-confirm-modal">
+    <div class="admin-modal" style="max-width:420px;">
+      <div style="padding:2rem 1.75rem; text-align:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(220,38,38,0.1);border:2px solid rgba(220,38,38,0.2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;margin:0 auto 1.25rem;">🗑️</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:800;color:#0f1f2e;margin-bottom:0.5rem;">Delete Request?</h3>
+        <p style="color:#5a6a7a;font-size:0.9rem;line-height:1.6;margin-bottom:0.5rem;">You are about to delete the document request for:</p>
+        <p id="confirm-delete-name" style="font-weight:700;color:#0f1f2e;font-size:1rem;margin-bottom:1.5rem;"></p>
+        <p style="color:#dc2626;font-size:0.82rem;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.15);border-radius:8px;padding:10px 14px;">⚠️ This action cannot be undone.</p>
+      </div>
+      <input type="hidden" id="delete-pending-id">
+      <div style="display:flex;gap:0.75rem;padding:1rem 1.75rem 1.5rem;justify-content:center;">
+        <button class="btn-admin-ghost" onclick="closeDeleteConfirm()" style="flex:1;">Cancel</button>
+        <button class="btn-admin-danger" onclick="confirmDelete()" style="flex:1;padding:10px 20px;">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/managedocuments.js"></script>
+</body>
+</html>

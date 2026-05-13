@@ -88,11 +88,12 @@ window.editNews = async (id) => {
 }
 
 // ── DELETE ──
-window.deleteNews = async (id) => {
-  if (!confirm('Delete this news article? This cannot be undone.')) return
-  const { error } = await supabase.from('news').delete().eq('id', id)
-  if (error) { alert('Error: ' + error.message); return }
-  loadNews()
+window.deleteNews = (id) => {
+  showDeleteConfirm('Are you sure you want to delete this news article?', async () => {
+    const { error } = await supabase.from('news').delete().eq('id', id)
+    if (error) { alert('Error: ' + error.message); return }
+    loadNews()
+  })
 }
 
 // ── SAVE FORM ──
@@ -136,3 +137,30 @@ window.logout = async () => { await supabase.auth.signOut(); localStorage.clear(
 window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open')
 
 loadNews()
+
+
+// ── CUSTOM DELETE CONFIRM MODAL ──
+let _deleteCallback = null
+
+window.showDeleteConfirm = (message, callback) => {
+  document.getElementById('confirm-delete-message').textContent = message
+  _deleteCallback = callback
+  document.getElementById('delete-confirm-modal').classList.add('open')
+}
+
+window.closeDeleteConfirm = () => {
+  document.getElementById('delete-confirm-modal').classList.remove('open')
+  _deleteCallback = null
+}
+
+window.confirmDeleteAction = async () => {
+  if (_deleteCallback) await _deleteCallback()
+  closeDeleteConfirm()
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const m = document.getElementById('delete-confirm-modal')
+  if (m) m.addEventListener('click', e => {
+    if (e.target.id === 'delete-confirm-modal') closeDeleteConfirm()
+  })
+})

@@ -389,3 +389,116 @@
   .admin-form-row { grid-template-columns: 1fr; }
   .doc-detail-grid { grid-template-columns: 1fr; }
 }
+/* ============================================================
+   ADMIN PATCH — Paste at the BOTTOM of your css/admin.css
+   Fixes: missing buttons, nav conflicts, layout issues
+   ============================================================ */
+
+/* ── FIX: Prevent global.css nav from affecting admin pages ── */
+.admin-body nav {
+  display: none !important;
+}
+
+/* ── FIX: Topbar layout ── */
+.admin-topbar {
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+  gap: 1rem;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ── FIX: Buttons always visible in topbar ── */
+.admin-topbar .btn-admin-primary,
+.admin-topbar .btn-admin-ghost {
+  flex-shrink: 0;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ── FIX: admin-main takes full width properly ── */
+.admin-body {
+  display: flex !important;
+  padding-top: 0 !important;
+}
+.admin-main {
+  flex: 1;
+  margin-left: 260px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ── SK TAB STYLES ── */
+.sk-tab {
+  padding: 0.85rem 1.5rem;
+  background: none; border: none;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--gray); cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: -2px;
+}
+.sk-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.sk-tab:hover  { color: var(--navy); }
+
+/* ── BTN WARNING ── */
+.btn-admin-warning {
+  background: rgba(234,179,8,0.1);
+  border: 1px solid rgba(234,179,8,0.3);
+  color: #b45309; border-radius: 8px;
+  padding: 9px 16px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-admin-warning:hover { background: rgba(234,179,8,0.18); }
+
+/* ── RESPONSIVE FIX ── */
+@media (max-width: 768px) {
+  .admin-main { margin-left: 0; }
+  .admin-sidebar { transform: translateX(-260px); }
+  .admin-sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: block !important; }
+}
+
+/* ── FIX: Prevent global.css from styling admin sidebar nav ── */
+.admin-sidebar nav,
+.admin-sidebar .sidebar-nav {
+  position: static !important;
+  height: auto !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-bottom: none !important;
+  padding: 1rem 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  z-index: auto !important;
+}
+
+/* ── FIX: admin-main must not have padding-top from navbar ── */
+.admin-body .admin-main {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* ── FIX: body padding-top reset for admin ── */
+.admin-body {
+  padding-top: 0 !important;
+}
