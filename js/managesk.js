@@ -1,3 +1,38 @@
+// ── IMAGE UPLOAD — SK PROGRAMS ──
+let programImgFile = null
+
+window.previewProgramImg = (input) => {
+  const file = input.files[0]
+  if (!file) return
+  programImgFile = file
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    document.getElementById('program-img-preview').innerHTML = `<img src="${e.target.result}" alt="Preview">`
+    document.getElementById('program-img-clear').style.display = 'inline-flex'
+  }
+  reader.readAsDataURL(file)
+}
+
+window.clearProgramImg = () => {
+  programImgFile = null
+  document.getElementById('program-img-preview').innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+  document.getElementById('program-img-file').value = ''
+  document.getElementById('program-img-clear').style.display = 'none'
+  document.getElementById('program-image').value = ''
+}
+
+async function uploadProgramImg() {
+  if (!programImgFile) return document.getElementById('program-image').value || null
+  const ext      = programImgFile.name.split('.').pop()
+  const fileName = `sk-programs/${Date.now()}.${ext}`
+  const { error } = await supabase.storage
+    .from('images')
+    .upload(fileName, programImgFile, { upsert: true })
+  if (error) { console.error('Upload error:', error.message); return null }
+  const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName)
+  return urlData.publicUrl
+}
+
 /* ============================================================
    MANAGESK.JS — SK Programs & Events Management
    Place in: js/admin/managesk.js
@@ -53,6 +88,8 @@ window.openProgramModal = () => {
   document.getElementById('program-form').reset()
   document.getElementById('program-id').value = ''
   document.getElementById('program-error').textContent = ''
+  clearProgramImg()
+  programImgFile = null
   document.getElementById('program-modal').classList.add('open')
 }
 
@@ -66,7 +103,16 @@ window.editProgram = async (id) => {
   document.getElementById('program-title').value       = data.title
   document.getElementById('program-description').value = data.description
   document.getElementById('program-status').value      = data.status
-  document.getElementById('program-image').value       = data.image_url || ''
+  document.getElementById('program-image').value = data.image_url || ''
+  programImgFile = null
+  const editPreview = document.getElementById('program-img-preview')
+  if (data.image_url) {
+    editPreview.innerHTML = `<img src="${data.image_url}" alt="Current image">`
+    document.getElementById('program-img-clear').style.display = 'inline-flex'
+  } else {
+    editPreview.innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+    document.getElementById('program-img-clear').style.display = 'none'
+  }
   document.getElementById('program-modal').classList.add('open')
 }
 
@@ -84,12 +130,14 @@ document.getElementById('program-form').addEventListener('submit', async (e) => 
   errorEl.textContent = ''
   btn.disabled = true; btn.textContent = 'Saving...'
 
-  const id      = document.getElementById('program-id').value
+  const id = document.getElementById('program-id').value
+  btn.textContent = programImgFile ? 'Uploading image...' : 'Saving...'
+  const imageUrl = await uploadProgramImg()
   const payload = {
     title:       document.getElementById('program-title').value.trim(),
     description: document.getElementById('program-description').value.trim(),
     status:      document.getElementById('program-status').value,
-    image_url:   document.getElementById('program-image').value.trim() || null,
+    image_url:   imageUrl,
     author_id:   user.id,
     updated_at:  new Date().toISOString()
   }

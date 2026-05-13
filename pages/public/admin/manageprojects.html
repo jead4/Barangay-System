@@ -23,7 +23,6 @@
       <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
       <div class="sidebar-section-label">Content</div>
       <a href="managenews.html" class="sidebar-link"><span class="sidebar-icon">📰</span> News</a>
-      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
       <a href="manageprojects.html" class="sidebar-link active"><span class="sidebar-icon">🏗️</span> Projects</a>
       <a href="managesk.html" class="sidebar-link"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
       <div class="sidebar-section-label">Services</div>
@@ -43,7 +42,7 @@
     <header class="admin-topbar">
       <div class="topbar-left">
         <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-        <div>
+        <div class="topbar-title-wrap">
           <h1 class="topbar-title">Manage Projects</h1>
           <p class="topbar-sub">Add and update barangay infrastructure projects</p>
         </div>
@@ -52,6 +51,11 @@
         <button class="btn-admin-primary" onclick="openProjectModal()">+ Add Project</button>
       </div>
     </header>
+
+    <!-- Mobile add button (shown below topbar on small screens) -->
+    <div class="mobile-add-btn">
+      <button class="btn-admin-primary" onclick="openProjectModal()">+ Add Project</button>
+    </div>
 
     <div class="admin-filter-bar">
       <button class="filter-chip active" onclick="filterProjects('all', this)">All</button>
@@ -131,8 +135,18 @@
           </div>
         </div>
         <div class="admin-form-group">
-          <label>Image URL (optional)</label>
-          <input type="url" id="project-image" placeholder="https://...">
+          <label>Image (optional)</label>
+          <div class="img-upload-wrap">
+            <div class="img-preview" id="project-img-preview">
+              <span class="img-preview-placeholder">📷 No image selected</span>
+            </div>
+            <label class="img-upload-btn" for="project-img-file">
+              📁 Choose Image
+              <input type="file" id="project-img-file" accept="image/*" style="display:none" onchange="previewProjectImg(this)">
+            </label>
+            <button type="button" class="img-clear-btn" onclick="clearProjectImg()" id="project-img-clear" style="display:none">✕ Remove</button>
+          </div>
+          <input type="hidden" id="project-image">
         </div>
         <div class="admin-modal-error" id="project-error"></div>
         <div class="admin-modal-footer">

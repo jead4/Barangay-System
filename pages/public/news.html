@@ -99,12 +99,61 @@
     <p>Transparent · Accountable · Accessible</p>
   </footer>
 
+
+  <!-- ══ NEWS DETAIL MODAL ══ -->
+  <div class="news-detail-overlay" id="news-detail-modal" onclick="closeNewsDetail(event)">
+    <div class="news-detail-box">
+      <button class="news-detail-close" onclick="closeNewsDetail()">✕</button>
+      <div class="news-detail-img" id="news-detail-img"></div>
+      <div class="news-detail-content">
+        <div class="news-detail-meta">
+          <span class="news-tag" id="news-detail-tag"></span>
+          <span class="news-detail-date" id="news-detail-date"></span>
+        </div>
+        <h2 id="news-detail-title"></h2>
+        <div class="news-detail-body" id="news-detail-body"></div>
+      </div>
+    </div>
+  </div>
+
   <script src="/js/navbar.js"></script>
   <script type="module" src="/js/navauth.js"></script>
-  <script type="module">
+  <script>
+  // Global news store accessible outside module
+  window.__newsStore = []
+  window.openNewsDetail = function(idx) {
+    const n = window.__newsStore[idx]
+    if (!n) return
+    const grads = ["bg-blue-grad","bg-green-grad","bg-amber-grad","bg-purple-grad","bg-teal-grad"]
+    const imgEl = document.getElementById("news-detail-img")
+    imgEl.className = "news-detail-img"
+    if (n.image_url) {
+      imgEl.style.backgroundImage = "url('" + n.image_url + "')"
+      imgEl.style.backgroundSize = "cover"
+      imgEl.style.backgroundPosition = "center"
+    } else {
+      imgEl.classList.add(grads[idx % grads.length])
+      imgEl.style.backgroundImage = ""
+    }
+    document.getElementById("news-detail-tag").textContent   = n.category
+    document.getElementById("news-detail-date").textContent  = new Date(n.created_at).toLocaleDateString("en-PH", {year:"numeric",month:"long",day:"numeric"})
+    document.getElementById("news-detail-title").textContent = n.title
+    document.getElementById("news-detail-body").textContent  = n.content
+    document.getElementById("news-detail-modal").classList.add("open")
+    document.body.style.overflow = "hidden"
+  }
+  window.closeNewsDetail = function() {
+    document.getElementById("news-detail-modal").classList.remove("open")
+    document.body.style.overflow = ""
+  }
+</script>
+
+<script type="module">
     import { supabase } from '/js/supabase.js'
 
     // ── HELPERS ──
+    const newsDataMap = {}
+
     const tagClass = {
       announcements: 'tag-announcement', health: 'tag-health',
       projects: 'tag-infrastructure',    events: 'tag-announcement',
@@ -215,14 +264,18 @@
       }
       emptyEl.style.display = 'none'
       const items = latest.length ? latest : list
-      gridEl.innerHTML = items.map(n => `
-        <div class="news-card-grid">
+      window.__newsStore = items
+      gridEl.innerHTML = items.map((n, i) => `
+        <div class="news-card-grid news-card-clickable">
           ${imgDiv(n.image_url, 'grid-img')}
           <div class="grid-body">
             <span class="news-tag ${tagClass[n.category] || 'tag-announcement'}">${n.category}</span>
             <h4>${n.title}</h4>
-            <p>${n.content.substring(0,130)}...</p>
-            <span class="news-date">${fmtDate(n.created_at)}</span>
+            <p>${n.content.substring(0,130)}${n.content.length > 130 ? '...' : ''}</p>
+            <div class="news-card-footer">
+              <span class="news-date">${fmtDate(n.created_at)}</span>
+              <button class="news-read-more-btn" onclick="openNewsDetail(${i})">Read more →</button>
+            </div>
           </div>
         </div>`).join('')
     }
@@ -418,7 +471,108 @@
     @media (max-width: 1024px) {
       .projects-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+
+    .news-read-more-btn {
+      background: none; border: none; padding: 0;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--gold); cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: color 0.2s;
+    }
+    .news-read-more-btn:hover { color: var(--sky); }
+
+    /* ── NEWS DETAIL MODAL ── */
+    .news-detail-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,31,46,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .news-detail-overlay.open { opacity: 1; visibility: visible; }
+    .news-detail-box {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%; max-width: 680px;
+      max-height: 88vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+    .news-detail-overlay.open .news-detail-box { transform: translateY(0); }
+    .news-detail-close {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(15,31,46,0.08); border: none;
+      font-size: 0.85rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10; transition: background 0.2s;
+    }
+    .news-detail-close:hover { background: rgba(15,31,46,0.15); }
+    .news-detail-img {
+      width: 100%; height: 220px;
+      border-radius: 20px 20px 0 0;
+    }
+    .news-detail-content { padding: 1.75rem 2rem 2rem; }
+    .news-detail-meta {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    #news-detail-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem; font-weight: 800;
+      color: var(--navy); line-height: 1.2;
+      margin: 0 0 1.25rem;
+    }
+    #news-detail-body {
+      font-size: 0.95rem; color: var(--gray);
+      line-height: 1.85; white-space: pre-wrap;
+      margin: 0;
+    }
+
+    /* ── READ MORE LINK ── */
+    .news-card-clickable { cursor: pointer; }
+    .news-card-footer {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-top: 0.75rem;
+    }
+    .news-read-more {
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--gold); transition: color 0.2s;
+    }
+    .news-card-clickable:hover .news-read-more { color: var(--sky); }
+    .news-card-clickable:hover { background: var(--white) !important; }
+
+    @media (max-width: 768px) {
+      .news-detail-box { max-width: 100%; border-radius: 16px 16px 0 0; }
+      .news-detail-overlay { align-items: flex-end; padding: 0; }
+      .news-detail-img { height: 160px; border-radius: 16px 16px 0 0; }
+      .news-detail-content { padding: 1.25rem; }
+      #news-detail-title { font-size: 1.4rem; }
+    }
   </style>
+
+
+  <!-- ══ NEWS DETAIL MODAL ══ -->
+  <div class="news-detail-overlay" id="news-detail-modal" onclick="if(event.target===this)closeNewsDetail()">
+    <div class="news-detail-box">
+      <button class="news-detail-close" onclick="closeNewsDetail()">✕</button>
+      <div class="news-detail-img" id="news-detail-img"></div>
+      <div class="news-detail-content">
+        <div class="news-detail-meta">
+          <span id="news-detail-tag" class="news-tag"></span>
+          <span id="news-detail-date" class="news-date"></span>
+        </div>
+        <h2 id="news-detail-title"></h2>
+        <p id="news-detail-body"></p>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

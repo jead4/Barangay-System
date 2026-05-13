@@ -1,3 +1,43 @@
+// ── IMAGE UPLOAD — PROJECTS ──
+let projectImgFile = null
+
+window.previewProjectImg = (input) => {
+  const file = input.files[0]
+  if (!file) return
+  projectImgFile = file
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const preview = document.getElementById('project-img-preview')
+    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`
+    document.getElementById('project-img-clear').style.display = 'inline-flex'
+  }
+  reader.readAsDataURL(file)
+}
+
+window.clearProjectImg = () => {
+  projectImgFile = null
+  document.getElementById('project-img-preview').innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+  document.getElementById('project-img-file').value = ''
+  document.getElementById('project-img-clear').style.display = 'none'
+  document.getElementById('project-image').value = ''
+}
+
+async function uploadProjectImg() {
+  if (!projectImgFile) return document.getElementById('project-image').value || null
+
+  const ext      = projectImgFile.name.split('.').pop()
+  const fileName = `projects/${Date.now()}.${ext}`
+
+  const { data, error } = await supabase.storage
+    .from('images')
+    .upload(fileName, projectImgFile, { upsert: true })
+
+  if (error) { console.error('Upload error:', error.message); return null }
+
+  const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName)
+  return urlData.publicUrl
+}
 /* ============================================================
    MANAGEPROJECTS.JS — Projects Management
    Place in: js/admin/manageprojects.js
@@ -73,6 +113,8 @@ window.openProjectModal = () => {
   document.getElementById('project-id').value = ''
   document.getElementById('project-progress').value = 0
   document.getElementById('project-error').textContent = ''
+  clearProjectImg()
+  projectImgFile = null
   document.getElementById('project-modal').classList.add('open')
 }
 
@@ -95,7 +137,16 @@ window.editProject = async (id) => {
   document.getElementById('project-progress').value    = data.progress || 0
   document.getElementById('project-start').value       = data.start_date || ''
   document.getElementById('project-end').value         = data.end_date || ''
-  document.getElementById('project-image').value       = data.image_url || ''
+  document.getElementById('project-image').value = data.image_url || ''
+  projectImgFile = null
+  const editPreview = document.getElementById('project-img-preview')
+  if (data.image_url) {
+    editPreview.innerHTML = `<img src="${data.image_url}" alt="Current image">`
+    document.getElementById('project-img-clear').style.display = 'inline-flex'
+  } else {
+    editPreview.innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+    document.getElementById('project-img-clear').style.display = 'none'
+  }
   document.getElementById('project-modal').classList.add('open')
 }
 
@@ -117,7 +168,11 @@ document.getElementById('project-form').addEventListener('submit', async (e) => 
   btn.disabled = true
   btn.textContent = 'Saving...'
 
-  const id      = document.getElementById('project-id').value
+  const id = document.getElementById('project-id').value
+
+  btn.textContent = projectImgFile ? 'Uploading image...' : 'Saving...'
+  const imageUrl = await uploadProjectImg()
+
   const payload = {
     title:       document.getElementById('project-title').value.trim(),
     description: document.getElementById('project-description').value.trim(),
@@ -127,7 +182,7 @@ document.getElementById('project-form').addEventListener('submit', async (e) => 
     progress:    parseInt(document.getElementById('project-progress').value) || 0,
     start_date:  document.getElementById('project-start').value || null,
     end_date:    document.getElementById('project-end').value || null,
-    image_url:   document.getElementById('project-image').value.trim() || null,
+    image_url:   imageUrl,
     author_id:   user.id,
     updated_at:  new Date().toISOString()
   }

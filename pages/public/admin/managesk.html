@@ -23,7 +23,6 @@
       <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
       <div class="sidebar-section-label">Content</div>
       <a href="managenews.html" class="sidebar-link"><span class="sidebar-icon">📰</span> News</a>
-      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
       <a href="manageprojects.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span> Projects</a>
       <a href="managesk.html" class="sidebar-link active"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
       <div class="sidebar-section-label">Services</div>
@@ -58,7 +57,7 @@
 
     <!-- PROGRAMS SECTION -->
     <div id="tab-programs">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem 1rem;">
+      <div class="tab-content-header">
         <div class="admin-section-title" style="padding:0;margin:0;">Youth Programs</div>
         <button class="btn-admin-primary" onclick="openProgramModal()">+ Add Program</button>
       </div>
@@ -82,7 +81,7 @@
 
     <!-- EVENTS SECTION -->
     <div id="tab-events" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem 1rem;">
+      <div class="tab-content-header">
         <div class="admin-section-title" style="padding:0;margin:0;">Upcoming Events</div>
         <button class="btn-admin-primary" onclick="openEventModal()">+ Add Event</button>
       </div>
@@ -133,8 +132,18 @@
           </select>
         </div>
         <div class="admin-form-group">
-          <label>Image URL (optional)</label>
-          <input type="url" id="program-image" placeholder="https://...">
+          <label>Image (optional)</label>
+          <div class="img-upload-wrap">
+            <div class="img-preview" id="program-img-preview">
+              <span class="img-preview-placeholder">📷 No image selected</span>
+            </div>
+            <label class="img-upload-btn" for="program-img-file">
+              📁 Choose Image
+              <input type="file" id="program-img-file" accept="image/*" style="display:none" onchange="previewProgramImg(this)">
+            </label>
+            <button type="button" class="img-clear-btn" onclick="clearProgramImg()" id="program-img-clear" style="display:none">✕ Remove</button>
+          </div>
+          <input type="hidden" id="program-image">
         </div>
         <div class="admin-modal-error" id="program-error"></div>
         <div class="admin-modal-footer">

@@ -23,7 +23,6 @@
       <a href="manageresidents.html" class="sidebar-link"><span class="sidebar-icon">👥</span> Residents</a>
       <div class="sidebar-section-label">Content</div>
       <a href="managenews.html" class="sidebar-link active"><span class="sidebar-icon">📰</span> News</a>
-      <a href="manageannouncements.html" class="sidebar-link"><span class="sidebar-icon">📢</span> Announcements</a>
       <a href="manageprojects.html" class="sidebar-link"><span class="sidebar-icon">🏗️</span> Projects</a>
       <a href="managesk.html" class="sidebar-link"><span class="sidebar-icon">🌱</span> SK Programs &amp; Events</a>
       <div class="sidebar-section-label">Services</div>
@@ -43,7 +42,7 @@
     <header class="admin-topbar">
       <div class="topbar-left">
         <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-        <div>
+        <div class="topbar-title-wrap">
           <h1 class="topbar-title">Manage News</h1>
           <p class="topbar-sub">Add, edit, and publish news articles</p>
         </div>
@@ -52,6 +51,11 @@
         <button class="btn-admin-primary" onclick="openNewsModal()">+ Add News</button>
       </div>
     </header>
+
+    <!-- Mobile add button (shown below topbar on small screens) -->
+    <div class="mobile-add-btn">
+      <button class="btn-admin-primary" onclick="openNewsModal()">+ Add News</button>
+    </div>
 
     <div class="admin-filter-bar">
       <button class="filter-chip active" onclick="filterNews('all', this)">All</button>
@@ -112,8 +116,18 @@
             </select>
           </div>
           <div class="admin-form-group">
-            <label>Image URL (optional)</label>
-            <input type="url" id="news-image" placeholder="https://...">
+            <label>Image (optional)</label>
+            <div class="img-upload-wrap">
+              <div class="img-preview" id="news-img-preview">
+                <span class="img-preview-placeholder">📷 No image selected</span>
+              </div>
+              <label class="img-upload-btn" for="news-img-file">
+                📁 Choose Image
+                <input type="file" id="news-img-file" accept="image/*" style="display:none" onchange="previewNewsImg(this)">
+              </label>
+              <button type="button" class="img-clear-btn" onclick="clearNewsImg()" id="news-img-clear" style="display:none">✕ Remove</button>
+            </div>
+            <input type="hidden" id="news-image">
           </div>
         </div>
         <div class="admin-form-group">

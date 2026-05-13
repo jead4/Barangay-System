@@ -1,3 +1,43 @@
+// ── IMAGE UPLOAD — NEWS ──
+let newsImgFile = null
+
+window.previewNewsImg = (input) => {
+  const file = input.files[0]
+  if (!file) return
+  newsImgFile = file
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const preview = document.getElementById('news-img-preview')
+    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`
+    document.getElementById('news-img-clear').style.display = 'inline-flex'
+  }
+  reader.readAsDataURL(file)
+}
+
+window.clearNewsImg = () => {
+  newsImgFile = null
+  document.getElementById('news-img-preview').innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+  document.getElementById('news-img-file').value = ''
+  document.getElementById('news-img-clear').style.display = 'none'
+  document.getElementById('news-image').value = ''
+}
+
+async function uploadNewsImg() {
+  if (!newsImgFile) return document.getElementById('news-image').value || null
+
+  const ext      = newsImgFile.name.split('.').pop()
+  const fileName = `news/${Date.now()}.${ext}`
+
+  const { data, error } = await supabase.storage
+    .from('images')
+    .upload(fileName, newsImgFile, { upsert: true })
+
+  if (error) { console.error('Upload error:', error.message); return null }
+
+  const { data: urlData } = supabase.storage.from('images').getPublicUrl(fileName)
+  return urlData.publicUrl
+}
 /* ============================================================
    MANAGENEWS.JS — News Management
    Place in: js/admin/managenews.js
@@ -64,6 +104,8 @@ window.openNewsModal = () => {
   document.getElementById('news-form').reset()
   document.getElementById('news-id').value = ''
   document.getElementById('news-error').textContent = ''
+  clearNewsImg()
+  newsImgFile = null
   document.getElementById('news-modal').classList.add('open')
 }
 
@@ -81,7 +123,16 @@ window.editNews = async (id) => {
   document.getElementById('news-title').value     = data.title
   document.getElementById('news-category').value  = data.category
   document.getElementById('news-content').value   = data.content
-  document.getElementById('news-image').value     = data.image_url || ''
+  document.getElementById('news-image').value = data.image_url || ''
+  newsImgFile = null
+  const editPreview = document.getElementById('news-img-preview')
+  if (data.image_url) {
+    editPreview.innerHTML = `<img src="${data.image_url}" alt="Current image">`
+    document.getElementById('news-img-clear').style.display = 'inline-flex'
+  } else {
+    editPreview.innerHTML = '<span class="img-preview-placeholder">📷 No image selected</span>'
+    document.getElementById('news-img-clear').style.display = 'none'
+  }
   document.getElementById('news-featured').checked = data.is_featured
   document.getElementById('news-alert').checked    = data.is_alert
   document.getElementById('news-modal').classList.add('open')
@@ -105,12 +156,17 @@ document.getElementById('news-form').addEventListener('submit', async (e) => {
   btn.disabled = true
   btn.textContent = 'Saving...'
 
-  const id      = document.getElementById('news-id').value
+  const id = document.getElementById('news-id').value
+
+  // Upload image if new file selected
+  btn.textContent = newsImgFile ? 'Uploading image...' : 'Saving...'
+  const imageUrl = await uploadNewsImg()
+
   const payload = {
     title:       document.getElementById('news-title').value.trim(),
     category:    document.getElementById('news-category').value,
     content:     document.getElementById('news-content').value.trim(),
-    image_url:   document.getElementById('news-image').value.trim() || null,
+    image_url:   imageUrl,
     is_featured: document.getElementById('news-featured').checked,
     is_alert:    document.getElementById('news-alert').checked,
     author_id:   user.id,
