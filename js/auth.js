@@ -363,8 +363,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return
       }
 
-      // Insert into your "user" table
-      const { error: insertError } = await supabase.from('user').insert({
+      // Upsert into "user" table (handles cases where a trigger already created the row)
+      const { error: insertError } = await supabase.from('user').upsert({
         id:             data.user.id,
         first_name:     firstname,
         last_name:      lastname,
@@ -373,10 +373,10 @@ document.addEventListener('DOMContentLoaded', () => {
         birthdate:      birthdate || null,
         sitio:          sitio,
         role:           'resident'
-      })
+      }, { onConflict: 'id' })
 
       if (insertError) {
-        console.error('Insert error:', insertError)
+        console.error('Upsert error:', insertError)
       }
 
       errorEl.style.color = '#34d399'
