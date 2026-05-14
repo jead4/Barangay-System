@@ -133,8 +133,25 @@ window.saveDocStatus = async () => {
     return
   }
 
-  // ── SEND EMAIL if approved or released ──
-  if (['approved', 'released'].includes(newStatus)) {
+  // ── INSERT IN-APP NOTIFICATION ──
+  if (['approved', 'released', 'rejected'].includes(newStatus)) {
+    const req     = allRequests.find(r => r.id === id)
+    const docType = req?.type || 'Document'
+    const notifMsg = {
+      approved: `Your ${docType} request has been approved.${remarks ? ' Note: ' + remarks : ' Please wait for further instructions.'}`,
+      released: `Your ${docType} is ready for pickup.${remarks ? ' Note: ' + remarks : ' Please bring a valid ID to the barangay hall.'}`,
+      rejected: `Your ${docType} request has been rejected.${remarks ? ' Remarks: ' + remarks : ''}`
+    }
+    await supabase.from('notifications').insert({
+      user_id: req?.user_id,
+      title:   `Document Request ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`,
+      message: notifMsg[newStatus],
+      is_read: false
+    })
+  }
+
+  // ── SEND EMAIL if approved, released, or rejected ──
+  if (['approved', 'released', 'rejected'].includes(newStatus)) {
     const req         = allRequests.find(r => r.id === id)
     const u           = usersMap[req?.user_id]
     const residentEmail = u?.email || null

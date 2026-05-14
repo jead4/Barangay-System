@@ -314,6 +314,156 @@ footer p { color: rgba(255, 255, 255, 0.28); font-size: 0.8rem; }
   color: rgba(255, 255, 255, 0.45); font-size: 0.95rem;
 }
 
+/* ── NOTIFICATION BELL ── */
+.nav-notif-wrap {
+  position: relative;
+}
+.nav-notif-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+}
+.nav-notif-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--white);
+}
+.nav-notif-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.6rem; font-weight: 700;
+  min-width: 16px; height: 16px;
+  border-radius: 100px;
+  align-items: center; justify-content: center;
+  padding: 0 3px;
+  border: 2px solid rgba(15,31,46,0.97);
+  line-height: 1;
+}
+.nav-notif-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 320px;
+  background: #0f1f2e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  opacity: 0; visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.2s ease;
+  z-index: 301;
+  overflow: hidden;
+}
+.nav-notif-panel.open {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.nav-notif-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nav-notif-header > span {
+  color: var(--white);
+  font-size: 0.875rem; font-weight: 600;
+}
+.nav-notif-mark-all {
+  background: none; border: none;
+  color: var(--gold-light);
+  font-size: 0.75rem; font-weight: 500;
+  cursor: pointer; padding: 4px 8px;
+  border-radius: 6px; transition: background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.nav-notif-mark-all:hover { background: rgba(42,157,107,0.12); }
+.nav-notif-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+.nav-notif-empty {
+  text-align: center;
+  padding: 28px 16px;
+  color: rgba(255,255,255,0.35);
+  font-size: 0.85rem;
+  margin: 0;
+}
+.nav-notif-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+.nav-notif-item:last-child { border-bottom: none; }
+.nav-notif-item:hover { background: rgba(255,255,255,0.04); }
+.nav-notif-item.unread {
+  background: rgba(42,157,107,0.07);
+  border-left: 3px solid var(--gold);
+}
+.nav-notif-item.unread:hover { background: rgba(42,157,107,0.12); }
+.nav-notif-item-title {
+  color: var(--white);
+  font-size: 0.8rem; font-weight: 600;
+  margin-bottom: 4px;
+}
+.nav-notif-item-msg {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.775rem; line-height: 1.5;
+  margin-bottom: 6px;
+}
+.nav-notif-item-time {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.7rem;
+}
+
+/* ── RESIDENT NOTIFICATION TOAST ── */
+.resident-notif-toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 9999;
+  background: #0f1f2e;
+  border: 1px solid rgba(42,157,107,0.35);
+  border-left: 4px solid var(--gold);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 12px;
+  max-width: 340px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  animation: rntSlideIn 0.3s ease;
+}
+.rnt-icon {
+  color: var(--gold-light);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.rnt-body { flex: 1; }
+.rnt-title {
+  color: var(--white);
+  font-size: 0.825rem; font-weight: 700;
+  margin-bottom: 4px;
+}
+.rnt-msg {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.775rem; line-height: 1.5;
+}
+.rnt-close {
+  background: none; border: none;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.75rem; cursor: pointer;
+  padding: 0; flex-shrink: 0;
+  line-height: 1; margin-top: 2px;
+  transition: color 0.15s;
+}
+.rnt-close:hover { color: rgba(255,255,255,0.7); }
+@keyframes rntSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
