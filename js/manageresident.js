@@ -192,7 +192,7 @@ window.deleteResident = () => {
   const name = `${r?.first_name || ''} ${r?.last_name || ''}`.trim()
 
   showDeleteConfirm(`Remove ${name} from the system?`, async () => {
-    const { error } = await supabase.from('user').delete().eq('id', id)
+    const { error } = await supabase.rpc('delete_user_completely', { user_id: id })
     if (error) {
       document.getElementById('res-modal-error').textContent = error.message
       return
