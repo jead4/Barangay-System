@@ -277,13 +277,14 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault()
 
-      const firstname = document.getElementById('reg-firstname').value.trim()
-      const lastname  = document.getElementById('reg-lastname').value.trim()
-      const email     = document.getElementById('reg-email').value.trim()
-      const contact   = document.getElementById('reg-contact').value.trim()
-      const sitio     = document.getElementById('reg-sitio').value
-      const password  = document.getElementById('reg-password').value
-      const confirm   = document.getElementById('reg-confirm').value
+      const firstname  = document.getElementById('reg-firstname').value.trim()
+      const lastname   = document.getElementById('reg-lastname').value.trim()
+      const email      = document.getElementById('reg-email').value.trim()
+      const contact    = document.getElementById('reg-contact').value.trim()
+      const birthdate  = document.getElementById('reg-birthdate').value
+      const sitio      = document.getElementById('reg-sitio').value
+      const password   = document.getElementById('reg-password').value
+      const confirm    = document.getElementById('reg-confirm').value
       const errorEl   = document.getElementById('register-error')
       const btn       = registerForm.querySelector('button[type="submit"]')
 
@@ -369,6 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         last_name:      lastname,
         email:          email,
         contact_number: contact,
+        birthdate:      birthdate || null,
         sitio:          sitio,
         role:           'resident'
       })

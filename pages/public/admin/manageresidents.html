@@ -65,22 +65,22 @@
         </div>
       </div>
       <div class="res-stat-card">
-        <div class="res-stat-icon green">✅</div>
+        <div class="res-stat-icon green">🌱</div>
         <div>
-          <div class="res-stat-value" id="res-verified">—</div>
-          <div class="res-stat-label">Verified</div>
+          <div class="res-stat-value" id="res-sk-voters">—</div>
+          <div class="res-stat-label">SK Voters (15–30)</div>
         </div>
       </div>
       <div class="res-stat-card">
-        <div class="res-stat-icon amber">⏳</div>
+        <div class="res-stat-icon amber">🗳️</div>
         <div>
-          <div class="res-stat-value" id="res-pending">—</div>
-          <div class="res-stat-label">Pending Verification</div>
+          <div class="res-stat-value" id="res-brgy-voters">—</div>
+          <div class="res-stat-label">Barangay Voters (18+)</div>
         </div>
       </div>
     </div>
 
-    <!-- Filter bar -->
+    <!-- Sitio filter bar -->
     <div class="admin-filter-bar">
       <button class="filter-chip active" onclick="filterBySitio('all', this)">All Sitios</button>
       <button class="filter-chip" onclick="filterBySitio('Sitio Symwa', this)">Sitio Symwa</button>
@@ -94,6 +94,14 @@
       <button class="filter-chip" onclick="filterBySitio('Sitio Beavers', this)">Sitio Beavers</button>
     </div>
 
+    <!-- Age filter bar -->
+    <div class="admin-filter-bar" style="padding-top:0;">
+      <button class="age-chip active" onclick="filterByAge('all', this)">All Ages</button>
+      <button class="age-chip" onclick="filterByAge('sk', this)">🌱 SK Voters (15–30)</button>
+      <button class="age-chip" onclick="filterByAge('brgy', this)">🗳️ Barangay Voters (18+)</button>
+      <button class="age-chip" onclick="filterByAge('no-birthdate', this)">⚠️ No Birthdate</button>
+    </div>
+
     <!-- Table -->
     <div class="admin-table-wrap">
       <table class="admin-table">
@@ -103,6 +111,7 @@
             <th>Email</th>
             <th>Contact</th>
             <th>Sitio</th>
+            <th>Age</th>
             <th>Role</th>
             <th>Registered</th>
             <th>Actions</th>
@@ -145,6 +154,18 @@
           <div class="doc-detail-item">
             <span class="doc-detail-label">Sitio</span>
             <span class="doc-detail-value" id="res-modal-sitio">—</span>
+          </div>
+          <div class="doc-detail-item">
+            <span class="doc-detail-label">Date of Birth</span>
+            <span class="doc-detail-value" id="res-modal-birthdate">—</span>
+          </div>
+          <div class="doc-detail-item">
+            <span class="doc-detail-label">Age</span>
+            <span class="doc-detail-value" id="res-modal-age">—</span>
+          </div>
+          <div class="doc-detail-item">
+            <span class="doc-detail-label">Voter Eligibility</span>
+            <span class="doc-detail-value" id="res-modal-voter">—</span>
           </div>
           <div class="doc-detail-item">
             <span class="doc-detail-label">Registered</span>
@@ -207,6 +228,15 @@
 
     .role-admin    { background: rgba(124,58,237,0.1); color: #7c3aed; }
     .role-resident { background: rgba(42,157,107,0.1); color: #2a9d6b; }
+    .age-chip {
+      padding: 5px 14px; border-radius: 100px;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid rgba(15,31,46,0.12);
+      background: #fff; color: #5a6a7a;
+      font-family: 'Inter', sans-serif; transition: all 0.2s;
+    }
+    .age-chip:hover { border-color: #2a9d6b; color: #2a9d6b; }
+    .age-chip.active { background: rgba(42,157,107,0.1); border-color: #2a9d6b; color: #2a9d6b; font-weight: 700; }
   </style>
 
   <script type="module" src="/js/manageresident.js"></script>

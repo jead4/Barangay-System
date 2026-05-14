@@ -10,25 +10,38 @@ if (!user || user.role !== 'admin') window.location.href = '/index.html'
 document.getElementById('admin-name').textContent   = user.first_name || 'Admin'
 document.getElementById('admin-avatar').textContent = (user.first_name || 'A')[0].toUpperCase()
 
-let allResidents  = []
-let currentSitio  = 'all'
-let searchQuery   = ''
+let allResidents   = []
+let currentSitio   = 'all'
+let currentAge     = 'all'
+let searchQuery    = ''
+
+function getAge(birthdate) {
+  if (!birthdate) return null
+  const today = new Date()
+  const dob   = new Date(birthdate)
+  let age = today.getFullYear() - dob.getFullYear()
+  const m = today.getMonth() - dob.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--
+  return age
+}
 
 // ── LOAD RESIDENTS ──
 async function loadResidents() {
   const { data, error } = await supabase
     .from('user')
-    .select('id, first_name, last_name, email, contact_number, sitio, role, created_at')
+    .select('id, first_name, last_name, email, contact_number, sitio, birthdate, role, created_at')
     .eq('role', 'resident')
     .order('created_at', { ascending: false })
 
   if (error) { console.error(error.message); return }
   allResidents = data || []
 
-  // Stats
-  document.getElementById('res-total').textContent    = allResidents.length
-  document.getElementById('res-verified').textContent  = allResidents.length
-  document.getElementById('res-pending').textContent   = 0
+  const skCount   = allResidents.filter(r => { const a = getAge(r.birthdate); return a !== null && a >= 15 && a <= 30 }).length
+  const brgyCount = allResidents.filter(r => { const a = getAge(r.birthdate); return a !== null && a >= 18 }).length
+
+  document.getElementById('res-total').textContent      = allResidents.length
+  document.getElementById('res-sk-voters').textContent  = skCount
+  document.getElementById('res-brgy-voters').textContent = brgyCount
 
   render()
 }
@@ -39,6 +52,16 @@ function render() {
 
   if (currentSitio !== 'all') {
     list = list.filter(r => r.sitio === currentSitio)
+  }
+
+  if (currentAge !== 'all') {
+    list = list.filter(r => {
+      const age = getAge(r.birthdate)
+      if (currentAge === 'sk')           return age !== null && age >= 15 && age <= 30
+      if (currentAge === 'brgy')         return age !== null && age >= 18
+      if (currentAge === 'no-birthdate') return !r.birthdate
+      return true
+    })
   }
 
   if (searchQuery.trim()) {
@@ -52,7 +75,7 @@ function render() {
   const tbody = document.getElementById('residents-tbody')
 
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="table-empty">No residents found.</td></tr>`
+    tbody.innerHTML = `<tr><td colspan="8" class="table-empty">No residents found.</td></tr>`
     return
   }
 
@@ -60,6 +83,8 @@ function render() {
     const name    = `${r.first_name || ''} ${r.last_name || ''}`.trim()
     const initial = (r.first_name || '?')[0].toUpperCase()
     const date    = new Date(r.created_at).toLocaleDateString('en-PH')
+    const age     = getAge(r.birthdate)
+    const ageDisplay = age !== null ? age : '<span style="color:#94a3b8;font-size:0.75rem;">—</span>'
     return `
       <tr>
         <td>
@@ -71,6 +96,7 @@ function render() {
         <td>${r.email || '—'}</td>
         <td>${r.contact_number || '—'}</td>
         <td>${r.sitio || '—'}</td>
+        <td>${ageDisplay}</td>
         <td><span class="status-badge role-${r.role}">${r.role}</span></td>
         <td>${date}</td>
         <td>
@@ -84,6 +110,14 @@ function render() {
 window.filterBySitio = (sitio, el) => {
   currentSitio = sitio
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'))
+  el.classList.add('active')
+  render()
+}
+
+// ── FILTER BY AGE ──
+window.filterByAge = (group, el) => {
+  currentAge = group
+  document.querySelectorAll('.age-chip').forEach(c => c.classList.remove('active'))
   el.classList.add('active')
   render()
 }
@@ -108,6 +142,17 @@ window.viewResident = (id) => {
   document.getElementById('res-modal-contact').textContent = r.contact_number || '—'
   document.getElementById('res-modal-sitio').textContent  = r.sitio || '—'
   document.getElementById('res-modal-date').textContent   = new Date(r.created_at).toLocaleDateString('en-PH')
+
+  const age = getAge(r.birthdate)
+  document.getElementById('res-modal-birthdate').textContent = r.birthdate
+    ? new Date(r.birthdate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '—'
+  document.getElementById('res-modal-age').textContent = age !== null ? `${age} years old` : '—'
+
+  const tags = []
+  if (age !== null && age >= 15 && age <= 30) tags.push('🌱 SK Voter')
+  if (age !== null && age >= 18)              tags.push('🗳️ Barangay Voter')
+  document.getElementById('res-modal-voter').textContent = tags.length ? tags.join('  ·  ') : (age !== null ? 'Not yet eligible' : '—')
   document.getElementById('res-modal-role-select').value  = r.role
 
   const badge = document.getElementById('res-modal-role-badge')

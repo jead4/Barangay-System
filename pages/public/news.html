@@ -119,21 +119,19 @@
   <script src="/js/navbar.js"></script>
   <script type="module" src="/js/navauth.js"></script>
   <script>
-  // Global news store accessible outside module
-  window.__newsStore = []
-  window.openNewsDetail = function(idx) {
-    const n = window.__newsStore[idx]
+  window.__newsMap = {}
+  const grads = ["bg-blue-grad","bg-green-grad","bg-amber-grad","bg-purple-grad","bg-teal-grad"]
+  window.openNewsDetail = function(id) {
+    const n = window.__newsMap[id]
     if (!n) return
-    const grads = ["bg-blue-grad","bg-green-grad","bg-amber-grad","bg-purple-grad","bg-teal-grad"]
     const imgEl = document.getElementById("news-detail-img")
     imgEl.className = "news-detail-img"
     if (n.image_url) {
-      imgEl.style.backgroundImage = "url('" + n.image_url + "')"
-      imgEl.style.backgroundSize = "cover"
-      imgEl.style.backgroundPosition = "center"
+      imgEl.style.cssText = `background:url('${n.image_url}') center/cover no-repeat;`
     } else {
-      imgEl.classList.add(grads[idx % grads.length])
-      imgEl.style.backgroundImage = ""
+      const g = grads[Object.keys(window.__newsMap).indexOf(String(id)) % grads.length]
+      imgEl.className = `news-detail-img ${g}`
+      imgEl.style.cssText = ""
     }
     document.getElementById("news-detail-tag").textContent   = n.category
     document.getElementById("news-detail-date").textContent  = new Date(n.created_at).toLocaleDateString("en-PH", {year:"numeric",month:"long",day:"numeric"})
@@ -224,7 +222,7 @@
         const sides = featured.slice(1, 4)
         featuredEl.innerHTML = `
           <div class="news-featured">
-            <div class="news-card-featured">
+            <div class="news-card-featured news-card-clickable" onclick="openNewsDetail('${main.id}')">
               <div class="featured-img">${imgDiv(main.image_url, 'featured-img-placeholder')}</div>
               <div class="featured-body">
                 <span class="news-tag ${tagClass[main.category] || 'tag-announcement'}">${main.category}</span>
@@ -236,7 +234,7 @@
             ${sides.length ? `
             <div class="news-side-stack">
               ${sides.map(s => `
-                <div class="news-card-side">
+                <div class="news-card-side news-card-clickable" onclick="openNewsDetail('${s.id}')">
                   ${imgDiv(s.image_url, 'side-img')}
                   <div class="side-body">
                     <span class="news-tag ${tagClass[s.category] || 'tag-announcement'}">${s.category}</span>
@@ -263,10 +261,11 @@
         return
       }
       emptyEl.style.display = 'none'
+      // Store all news by ID for modal lookup
+      list.forEach(n => { window.__newsMap[n.id] = n })
       const items = latest.length ? latest : list
-      window.__newsStore = items
-      gridEl.innerHTML = items.map((n, i) => `
-        <div class="news-card-grid news-card-clickable">
+      gridEl.innerHTML = items.map(n => `
+        <div class="news-card-grid news-card-clickable" onclick="openNewsDetail('${n.id}')">
           ${imgDiv(n.image_url, 'grid-img')}
           <div class="grid-body">
             <span class="news-tag ${tagClass[n.category] || 'tag-announcement'}">${n.category}</span>
@@ -274,7 +273,7 @@
             <p>${n.content.substring(0,130)}${n.content.length > 130 ? '...' : ''}</p>
             <div class="news-card-footer">
               <span class="news-date">${fmtDate(n.created_at)}</span>
-              <button class="news-read-more-btn" onclick="openNewsDetail(${i})">Read more →</button>
+              <button class="news-read-more-btn" onclick="event.stopPropagation();openNewsDetail('${n.id}')">Read more →</button>
             </div>
           </div>
         </div>`).join('')
@@ -537,6 +536,8 @@
 
     /* ── READ MORE LINK ── */
     .news-card-clickable { cursor: pointer; }
+    .news-card-featured.news-card-clickable:hover,
+    .news-card-side.news-card-clickable:hover { opacity: 0.92; transition: opacity 0.2s; }
     .news-card-footer {
       display: flex; justify-content: space-between;
       align-items: center; margin-top: 0.75rem;
@@ -558,21 +559,6 @@
   </style>
 
 
-  <!-- ══ NEWS DETAIL MODAL ══ -->
-  <div class="news-detail-overlay" id="news-detail-modal" onclick="if(event.target===this)closeNewsDetail()">
-    <div class="news-detail-box">
-      <button class="news-detail-close" onclick="closeNewsDetail()">✕</button>
-      <div class="news-detail-img" id="news-detail-img"></div>
-      <div class="news-detail-content">
-        <div class="news-detail-meta">
-          <span id="news-detail-tag" class="news-tag"></span>
-          <span id="news-detail-date" class="news-date"></span>
-        </div>
-        <h2 id="news-detail-title"></h2>
-        <p id="news-detail-body"></p>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>

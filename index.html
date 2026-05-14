@@ -27,7 +27,7 @@
         <p>Experience fast, secure, and transparent public services through our digital portal. Request documents, check barangay projects, and engage with your community — anytime, anywhere.</p>
         <div class="hero-actions">
           <button class="btn-hero-primary" onclick="openModal('register')">Get Started Free</button>
-          <button class="btn-hero-ghost">Explore Services →</button>
+          <button class="btn-hero-ghost" onclick="document.querySelector('.services-section').scrollIntoView({behavior:'smooth'})">Explore Services →</button>
         </div>
         <div class="service-pills">
           <div class="service-pill"><span class="service-dot"></span>Document Requests</div>
@@ -76,12 +76,10 @@
       <h2 class="section-title">Barangay Digital Services</h2>
       <p class="section-sub">Access essential government services from the comfort of your home — fast, secure, and paperless.</p>
       <div class="services-grid">
-        <div class="service-card"><div class="service-card-icon">📄</div><h4>Document Requests</h4><p>Request barangay clearances, certificates of residency, and indigency letters online.</p><span class="service-card-arrow">Request now →</span></div>
-        <div class="service-card"><div class="service-card-icon">🗺️</div><h4>Project Tracker</h4><p>Monitor ongoing barangay infrastructure projects and community programs in real time.</p><span class="service-card-arrow">View projects →</span></div>
-        <div class="service-card"><div class="service-card-icon">📢</div><h4>News &amp; Announcements</h4><p>Stay updated with the latest barangay news, events, health advisories, and initiatives.</p><span class="service-card-arrow">Read more →</span></div>
-        <div class="service-card"><div class="service-card-icon">🏥</div><h4>Health Programs</h4><p>Schedule health consultations, vaccination drives, and access health records.</p><span class="service-card-arrow">Learn more →</span></div>
-        <div class="service-card"><div class="service-card-icon">🛡️</div><h4>Blotter &amp; Reports</h4><p>Submit community complaints, incident reports, and blotter entries securely online.</p><span class="service-card-arrow">File report →</span></div>
-        <div class="service-card"><div class="service-card-icon">💬</div><h4>Community Forum</h4><p>Engage with your neighbors, raise concerns, and participate in barangay consultations.</p><span class="service-card-arrow">Join now →</span></div>
+        <a class="service-card" href="/pages/public/resident/requestdocument.html"><div class="service-card-icon">📄</div><h4>Document Requests</h4><p>Request barangay clearances, certificates of residency, and indigency letters online.</p><span class="service-card-arrow">Request now →</span></a>
+        <a class="service-card" href="/pages/public/news.html"><div class="service-card-icon">🗺️</div><h4>Project Tracker</h4><p>Monitor ongoing barangay infrastructure projects and community programs in real time.</p><span class="service-card-arrow">View projects →</span></a>
+        <a class="service-card" href="/pages/public/news.html"><div class="service-card-icon">📢</div><h4>News &amp; Announcements</h4><p>Stay updated with the latest barangay news, events, health advisories, and initiatives.</p><span class="service-card-arrow">Read more →</span></a>
+        <div class="service-card service-card-disabled"><div class="service-card-icon">🛡️</div><h4>Blotter &amp; Reports</h4><p>Submit community complaints, incident reports, and blotter entries securely online.</p><span class="service-card-arrow" style="color:#94a3b8;">Coming soon</span></div>
       </div>
     </div>
   </section>
@@ -182,6 +180,11 @@
         <div class="modal-input-group">
           <label>CONTACT NUMBER</label>
           <input type="tel" id="reg-contact" placeholder="09XX XXX XXXX" required>
+        </div>
+
+        <div class="modal-input-group">
+          <label>DATE OF BIRTH</label>
+          <input type="date" id="reg-birthdate" required>
         </div>
 
         <div class="modal-input-group">

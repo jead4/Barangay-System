@@ -117,6 +117,7 @@ function renderProfile(navCta, name, role, userId) {
     </div>
   `
   navCta.classList.add('ready')
+  document.querySelector('.btn-hero-primary')?.remove()
 
   document.querySelector('.nav-profile').addEventListener('click', (e) => {
     document.getElementById('nav-dropdown').classList.toggle('open')
