@@ -193,6 +193,15 @@ function waitForNavCta(callback) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Render immediately from localStorage cache so the bell appears with no delay
+  const cached = JSON.parse(localStorage.getItem('user') || 'null')
+  if (cached?.id) {
+    waitForNavCta((navCta) => {
+      renderProfile(navCta, cached.first_name || 'User', cached.role || 'resident', cached.id)
+    })
+  }
+
+  // Sync with live auth state (handles logout / session expiry)
   supabase.auth.onAuthStateChange(async (_event, session) => {
     waitForNavCta(async (navCta) => {
       if (session) {
@@ -205,7 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = profile?.first_name || 'User'
         const role = profile?.role || 'resident'
         renderProfile(navCta, name, role, session.user.id)
-      } else {
+      } else if (_event === 'SIGNED_OUT') {
+        // Only switch to login buttons on explicit logout, not during session restore
+        localStorage.removeItem('user')
         renderAuthButtons(navCta)
       }
     })

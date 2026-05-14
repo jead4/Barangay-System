@@ -199,9 +199,17 @@ document.addEventListener('keydown', (e) => {
 })
 
 // ── MAIN ──
-document.addEventListener('DOMContentLoaded', () => {
+function initAuth() {
 
   updateNavbar()
+
+  // Auto-open modal if redirected from another page
+  const params = new URLSearchParams(window.location.search)
+  const modal  = params.get('modal')
+  if (modal) {
+    setTimeout(() => window.openModal(modal), 400)
+    history.replaceState(null, '', window.location.pathname)
+  }
 
   // ── LOGIN FORM ──
   const loginForm = document.getElementById('login-form')
@@ -429,4 +437,11 @@ if (forgotForm) {
   })
 }
 
-})
+}
+
+// Run immediately if DOM is ready, otherwise wait for it
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAuth)
+} else {
+  initAuth()
+}

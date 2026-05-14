@@ -1,0 +1,140 @@
+<!-- ══ LOGIN MODAL ══ -->
+<div class="modal-overlay" id="modal-login" onclick="closeModalOutside(event, 'modal-login')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-login')">✕</button>
+    <div class="modal-header">
+      <img src="/assets/images/logo.png" alt="Logo" class="modal-logo">
+      <h2>Welcome Back</h2>
+      <p>Sign in to your account</p>
+    </div>
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="switchRole(this, 'resident')">👤 Resident</button>
+      <button class="role-tab" onclick="switchRole(this, 'admin')">⚙️ Admin</button>
+    </div>
+    <form class="modal-form" id="login-form">
+      <input type="hidden" id="login-role" value="resident">
+      <div class="modal-input-group">
+        <label>EMAIL ADDRESS</label>
+        <input type="email" id="login-email" placeholder="juan@email.com" required>
+      </div>
+      <div class="modal-input-group">
+        <label>PASSWORD</label>
+        <input type="password" id="login-password" placeholder="••••••••" required>
+      </div>
+      <div class="modal-error" id="login-error"></div>
+      <div style="text-align:right; margin-top:-0.25rem;">
+        <a href="#" class="forgot-link" onclick="event.preventDefault(); switchModal('modal-login','modal-forgot')">Forgot password?</a>
+      </div>
+      <button type="submit" class="modal-btn-primary">Login →</button>
+      <div class="modal-divider"><span>or</span></div>
+      <p class="modal-switch">Don't have an account? <a href="#" onclick="event.preventDefault(); switchModal('modal-login','modal-register')">Register here</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ══ REGISTER MODAL ══ -->
+<div class="modal-overlay" id="modal-register" onclick="closeModalOutside(event, 'modal-register')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-register')">✕</button>
+    <div class="modal-header">
+      <img src="/assets/images/logo.png" alt="Logo" class="modal-logo">
+      <h2>Create Account</h2>
+      <p>Register as a resident of Barangay Day-as</p>
+    </div>
+    <div class="role-notice">
+      <span>👤</span>
+      <div>
+        <strong>Registering as Resident</strong>
+        <p>Role is assigned by the Admin after verification.</p>
+      </div>
+    </div>
+    <form class="modal-form" id="register-form">
+      <div class="modal-row">
+        <div class="modal-input-group">
+          <label>FIRST NAME</label>
+          <input type="text" id="reg-firstname" placeholder="Juan" required>
+        </div>
+        <div class="modal-input-group">
+          <label>LAST NAME</label>
+          <input type="text" id="reg-lastname" placeholder="Dela Cruz" required>
+        </div>
+      </div>
+      <div class="modal-input-group">
+        <label>EMAIL ADDRESS</label>
+        <input type="email" id="reg-email" placeholder="juan@email.com" required>
+      </div>
+      <div class="modal-input-group">
+        <label>CONTACT NUMBER</label>
+        <input type="tel" id="reg-contact" placeholder="09XX XXX XXXX" required>
+      </div>
+      <div class="modal-input-group">
+        <label>DATE OF BIRTH</label>
+        <input type="date" id="reg-birthdate" required>
+      </div>
+      <div class="modal-input-group">
+        <label>SITIO / PUROK</label>
+        <select id="reg-sitio" required>
+          <option value="" disabled selected>Select your sitio</option>
+          <option>Sitio Symwa</option>
+          <option>Sitio Tender Heart</option>
+          <option>Sitio Ulidamin</option>
+          <option>Sitio Feathers</option>
+          <option>Sitio SYC</option>
+          <option>Sitio Upper Day-as</option>
+          <option>Sitio Lower Day-as</option>
+          <option>Sitio Upper Beavers</option>
+          <option>Sitio Lower Beavers</option>
+        </select>
+      </div>
+      <div class="modal-input-group">
+        <label>PASSWORD</label>
+        <input type="password" id="reg-password" placeholder="Min. 8 characters (letters, numbers, symbols)" required oninput="checkRegStrength(this.value)">
+        <div style="margin-top:6px;">
+          <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:100px;overflow:hidden;">
+            <div id="reg-strength-bar" style="height:100%;width:0%;border-radius:100px;transition:width 0.3s,background 0.3s;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;">
+            <span id="reg-strength-label" style="font-size:0.72rem;color:rgba(255,255,255,0.4);"></span>
+            <span id="reg-strength-reqs" style="font-size:0.68rem;color:rgba(255,255,255,0.3);"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-input-group">
+        <label>CONFIRM PASSWORD</label>
+        <input type="password" id="reg-confirm" placeholder="Re-enter password" required>
+      </div>
+      <div class="modal-error" id="register-error"></div>
+      <button type="submit" class="modal-btn-primary">Create Account</button>
+      <div class="modal-divider"><span>or</span></div>
+      <p class="modal-switch">Already have an account? <a href="#" onclick="event.preventDefault(); switchModal('modal-register','modal-login')">Login here</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ══ FORGOT PASSWORD MODAL ══ -->
+<div class="modal-overlay" id="modal-forgot" onclick="closeModalOutside(event, 'modal-forgot')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-forgot')">✕</button>
+    <div class="modal-header">
+      <img src="/assets/images/logo.png" alt="Logo" class="modal-logo">
+      <h2>Reset Password</h2>
+      <p>Enter your email to receive a reset link</p>
+    </div>
+    <div id="forgot-success" style="display:none; text-align:center; padding:1rem 0 1.5rem;">
+      <div style="font-size:3rem; margin-bottom:1rem;">📧</div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:0.5rem;">Check Your Email</h3>
+      <p style="color:rgba(255,255,255,0.55);font-size:0.9rem;line-height:1.7;">We sent a password reset link to your email. Click the link in the email to set a new password.</p>
+      <p style="color:rgba(255,255,255,0.35);font-size:0.8rem;margin-top:1rem;">Didn't receive it? Check your spam folder.</p>
+    </div>
+    <form class="modal-form" id="forgot-form">
+      <div class="modal-input-group">
+        <label>EMAIL ADDRESS</label>
+        <input type="email" id="forgot-email" placeholder="juan@email.com" required>
+      </div>
+      <div class="modal-error" id="forgot-error"></div>
+      <button type="submit" class="modal-btn-primary">Send Reset Link →</button>
+      <div class="modal-divider"><span>or</span></div>
+      <p class="modal-switch">Remember your password? <a href="#" onclick="event.preventDefault(); switchModal('modal-forgot','modal-login')">Back to Login</a></p>
+    </form>
+  </div>
+</div>

@@ -33,6 +33,7 @@
       <button class="filter-tab" data-filter="events">Events</button>
       <button class="filter-tab" data-filter="alerts">Alerts</button>
       <button class="filter-tab" data-filter="youth">Youth</button>
+      <button class="filter-tab" data-filter="environment">Environment</button>
     </div>
   </div>
 
@@ -120,18 +121,19 @@
   <script type="module" src="/js/navauth.js"></script>
   <script>
   window.__newsMap = {}
-  const grads = ["bg-blue-grad","bg-green-grad","bg-amber-grad","bg-purple-grad","bg-teal-grad"]
+  window.__newsGrads = ["bg-blue-grad","bg-green-grad","bg-amber-grad","bg-purple-grad","bg-teal-grad"]
   window.openNewsDetail = function(id) {
     const n = window.__newsMap[id]
     if (!n) return
     const imgEl = document.getElementById("news-detail-img")
     imgEl.className = "news-detail-img"
+    imgEl.style.cssText = ""
     if (n.image_url) {
-      imgEl.style.cssText = `background:url('${n.image_url}') center/cover no-repeat;`
+      imgEl.innerHTML = `<img src="${n.image_url}" alt="${n.title}">`
     } else {
-      const g = grads[Object.keys(window.__newsMap).indexOf(String(id)) % grads.length]
+      const g = window.__newsGrads[Object.keys(window.__newsMap).indexOf(String(id)) % window.__newsGrads.length]
       imgEl.className = `news-detail-img ${g}`
-      imgEl.style.cssText = ""
+      imgEl.innerHTML = ""
     }
     document.getElementById("news-detail-tag").textContent   = n.category
     document.getElementById("news-detail-date").textContent  = new Date(n.created_at).toLocaleDateString("en-PH", {year:"numeric",month:"long",day:"numeric"})
@@ -514,13 +516,29 @@
     }
     .news-detail-close:hover { background: rgba(15,31,46,0.15); }
     .news-detail-img {
-      width: 100%; height: 220px;
+      width: 100%;
       border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      background: #f0f4f8;
+    }
+    .news-detail-img img {
+      width: 100%;
+      height: auto;
+      max-height: 480px;
+      object-fit: contain;
+      display: block;
     }
     .news-detail-content { padding: 1.75rem 2rem 2rem; }
     .news-detail-meta {
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 1rem; flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .news-detail-meta .news-tag { margin-bottom: 0; }
+    #news-detail-date {
+      color: var(--gray);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1;
     }
     #news-detail-title {
       font-family: 'Cormorant Garamond', serif;
@@ -552,7 +570,8 @@
     @media (max-width: 768px) {
       .news-detail-box { max-width: 100%; border-radius: 16px 16px 0 0; }
       .news-detail-overlay { align-items: flex-end; padding: 0; }
-      .news-detail-img { height: 160px; border-radius: 16px 16px 0 0; }
+      .news-detail-img { border-radius: 16px 16px 0 0; }
+      .news-detail-img img { max-height: 280px; }
       .news-detail-content { padding: 1.25rem; }
       #news-detail-title { font-size: 1.4rem; }
     }

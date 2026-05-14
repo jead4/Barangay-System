@@ -19,6 +19,55 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
   }
 
+  // Inject auth CSS if not already loaded
+  if (!document.querySelector('link[href="/css/auth.css"]')) {
+    const link = document.createElement('link')
+    link.rel  = 'stylesheet'
+    link.href = '/css/auth.css'
+    document.head.appendChild(link)
+  }
+
+  // Inject auth modals on every page (if not already present)
+  if (!document.getElementById('modal-login')) {
+    fetch('/components/auth-modals.html')
+      .then(res => res.text())
+      .then(html => {
+        const div = document.createElement('div')
+        div.innerHTML = html
+        document.body.appendChild(div)
+
+        // Define modal helpers immediately so buttons work right away
+        window.openModal = function(type) {
+          const modal = document.getElementById('modal-' + type)
+          if (modal) { modal.classList.add('open'); document.body.style.overflow = 'hidden' }
+        }
+        window.closeModal = function(id) {
+          const modal = document.getElementById(id)
+          if (modal) { modal.classList.remove('open'); document.body.style.overflow = '' }
+        }
+        window.closeModalOutside = function(event, id) {
+          if (event.target.id === id) window.closeModal(id)
+        }
+        window.switchModal = function(closeId, openId) {
+          window.closeModal(closeId)
+          setTimeout(() => window.openModal(openId), 280)
+        }
+        window.switchRole = function(el, role) {
+          document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'))
+          el.classList.add('active')
+          const roleInput = document.getElementById('login-role')
+          if (roleInput) roleInput.value = role
+        }
+
+        // Load auth.js for form submission handlers
+        const script = document.createElement('script')
+        script.type = 'module'
+        script.src  = '/js/auth.js'
+        document.body.appendChild(script)
+      })
+      .catch(err => console.error('Auth modals load failed:', err))
+  }
+
   function initNavbar() {
 
     // ── LOGO SWAP ──
@@ -76,9 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Close when a link is clicked
+      // Close when a link is clicked (skip the Services dropdown toggle)
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
+          if (link.classList.contains('nav-dropdown-toggle')) return
           navLinks.classList.remove('open');
           const spans = hamburger.querySelectorAll('span');
           spans[0].style.transform = '';
