@@ -201,8 +201,6 @@ document.addEventListener('keydown', (e) => {
 // ── MAIN ──
 function initAuth() {
 
-  updateNavbar()
-
   // Auto-open modal if redirected from another page
   const params = new URLSearchParams(window.location.search)
   const modal  = params.get('modal')

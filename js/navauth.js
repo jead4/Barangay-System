@@ -1,5 +1,8 @@
 import { supabase } from '/js/supabase.js'
 
+// Signal to auth.js that navauth.js is handling the navbar
+window.__navAuthHandled = true
+
 function showNotifToast(title, message) {
   const existing = document.getElementById('resident-notif-toast')
   if (existing) existing.remove()
@@ -81,7 +84,12 @@ async function loadNotifications(userId) {
   `).join('')
 }
 
+let _renderedUserId = null
+
 function renderProfile(navCta, name, role, userId) {
+  if (_renderedUserId === userId) return
+  _renderedUserId = userId
+
   const initial = name.charAt(0).toUpperCase()
 
   const bellHtml = role === 'resident' ? `
@@ -214,9 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = profile?.first_name || 'User'
         const role = profile?.role || 'resident'
         renderProfile(navCta, name, role, session.user.id)
-      } else if (_event === 'SIGNED_OUT') {
-        // Only switch to login buttons on explicit logout, not during session restore
+      } else {
         localStorage.removeItem('user')
+        _renderedUserId = null
         renderAuthButtons(navCta)
       }
     })
