@@ -121,6 +121,40 @@ function loadProfile() {
   `
 }
 
+// ── CHANGE PASSWORD ──
+window.changeResidentPassword = async () => {
+  const newPw     = document.getElementById('res-new-password').value
+  const confirmPw = document.getElementById('res-confirm-password').value
+  const msgEl     = document.getElementById('res-pw-message')
+  const btn       = document.getElementById('res-pw-btn')
+
+  msgEl.style.color = '#dc2626'
+  msgEl.textContent = ''
+
+  if (!newPw || !confirmPw) { msgEl.textContent = 'Please fill in both fields.'; return }
+  if (newPw.length < 8)     { msgEl.textContent = 'Password must be at least 8 characters.'; return }
+  if (newPw !== confirmPw)  { msgEl.textContent = 'Passwords do not match.'; return }
+
+  btn.disabled    = true
+  btn.textContent = 'Updating...'
+
+  const { error } = await supabase.auth.updateUser({ password: newPw })
+
+  if (error) {
+    msgEl.textContent = error.message
+    btn.disabled    = false
+    btn.textContent = 'Update Password'
+    return
+  }
+
+  msgEl.style.color = '#2a9d6b'
+  msgEl.textContent = '✓ Password updated successfully.'
+  document.getElementById('res-new-password').value     = ''
+  document.getElementById('res-confirm-password').value = ''
+  btn.disabled    = false
+  btn.textContent = 'Update Password'
+}
+
 // ── INIT ──
 loadDocuments()
 loadProfile()
